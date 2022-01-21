@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author toxic
- *
- */
-module OEWALE {
-}
