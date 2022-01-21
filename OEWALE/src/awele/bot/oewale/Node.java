@@ -56,7 +56,7 @@ public class Node {
 	 *  With this method representation instead of using 1 int for each hole, which represent a total of 12 holes * 32 bit/int = 384 bit,
 	 *  we only use one long which is 64 bit long, so we have a gain of 320 bit (83% less bit).
 	 *  And even if we use the shortest primitive java type, a byte, 12 holes * 8 bit/byte = 96 bit.
-	 *  So we have a gain of 32 bit (66% less bit) which is in both case a huge gain of data storage ! 
+	 *  So we have a gain of 32 bit (33% less bit) which is in both case a huge gain of data storage ! 
 	 * 
 	 */
 	private long data;
@@ -157,6 +157,47 @@ public class Node {
 	
 	
 	/*UTILS METHODS*/
+	
+	public Node search(long board) {
+		for(Node n : this.getChildrens()) {
+			if(n.getData() == board)
+				return n;
+		}
+		return null; // is our case we normally shouldn't return null
+	}
+	
+	
+	public void developMinMax(byte profondeur) {
+		if(this.childrens.isEmpty()) {
+			byte nodeValue = this.MinMax();
+			
+		}
+	}
+	
+	public byte MinMax(byte profondeur, byte max) {
+		byte score = (byte)(127 * max);			//if max == -1 we are maximizing so score is equal to -127 otherwise it equals 127;
+		
+		if(profondeur == 0) {
+			if(this.iswin())
+				return 50;
+			else if(this.islose())
+				return -50;
+			else
+				return 0;
+		}
+		
+		
+		for(byte i = 0; i < 6; i++) {
+			if(this.jouable(i)) {
+				byte eval = this.jouer(i).MinMax(profondeur - 1, -max);
+				score = (byte)( max * Math.min(max * eval, max * score) );
+			}
+		}
+		
+		return score;
+	}
+	
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -167,21 +208,7 @@ public class Node {
             return false; 
         } 
         Node node = (Node) obj; 
-        if(node.getData() != this.data)
-        	return false;
-        if(node.getFather() != this.father)
-        	return false;
-        if(node.getChildrens().size() != this.childrens.size())
-        	return false;
-        else {
-        	 Boolean equal = true;
-        	 for(int i = 0; i < this.childrens.size(); i++) {
-             	for(int j = 0; j < this.childrens.size(); j++) {
-             		equal = this.childrens.get(i) == node.getChildren(j) ? true : false;
-             	}
-             }
-        	 return equal;
-        }       
+        return node.getData() != this.data;
 	}
 
 	@Override

@@ -1,0 +1,5 @@
+on fait un minmax en largeur
+pour chaque feuille trouvée en largeur on développer un minmax recurisif de profondeur determinée dynamiquement
+on remonte la valeur du noeud et on tri en placant le meilleur coup tout a gauche
+
+elagae avec un parametre, on vire tous les fils qui ont une difference de score de x avec le meilleur coup 
