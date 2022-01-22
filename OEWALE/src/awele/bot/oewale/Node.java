@@ -216,10 +216,31 @@ public class Node {
 		return finish;
 	}
 	
-	public boolean isWin() {
-		return ourScore > opponentScore ? true : false;  
+	public boolean isPlayable(byte i) {
+		if(LongMethod.getIVal(i, this.getData()) == 0) {
+			return false;
+		}
+		boolean playable = false;
+		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole(i) >= i) // if our opponent is starving and we can give him seed 
+			playable = true;
+		return playable;
 	}
 	
+	public boolean isWin() {
+		return this.getOurScore() > this.getOpponentScore() ? true : false;  
+	}
+	
+	public byte getOurScore() {
+		return LongMethod.getOurScore(this.getData());
+	}
+	
+	public byte getOpponentScore() {
+		return (byte) (48 - this.getOurScore() - this.getOurNbSeeds() - this.getOpponentNbSeeds());  
+	}
+	
+	public byte getNbSeedInAnyHole(byte i) {
+		return LongMethod.getIVal((byte)i, this.data);
+	}
 	
 	public byte[] getOurHoles() {
 		byte[] holes = new byte[6];

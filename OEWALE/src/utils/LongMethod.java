@@ -64,5 +64,10 @@ public abstract class LongMethod {
 		return s;
 	}
 	//public static void 
+
+	public static byte getOurScore(long l) {
+		
+		
+	}
          
 }
