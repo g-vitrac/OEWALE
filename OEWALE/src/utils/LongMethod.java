@@ -62,12 +62,5 @@ public abstract class LongMethod {
 		}
 		s = left0 + s;
 		return s;
-	}
-	//public static void 
-
-	public static byte getOurScore(long l) {
-		
-		
-	}
-         
+	}     
 }

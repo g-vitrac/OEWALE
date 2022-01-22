@@ -31,11 +31,6 @@ public class test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		Board b = new Board();
-		long l = convertBoard(b);
-		System.out.println(l);
-		
 		/*
 		for(int i = 1; i <= 12; i++) {
 			long l = 0;

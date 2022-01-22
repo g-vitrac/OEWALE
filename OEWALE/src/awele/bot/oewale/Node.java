@@ -62,6 +62,7 @@ public class Node {
 	 * 
 	 */
 	private long data;
+	private byte ourScore;
 	private Node father = null;
 	private List<Node> childrens = new ArrayList<Node>();
 	
@@ -69,7 +70,20 @@ public class Node {
 		this.data = data;	
 	}
 	
+	public Node(long data, byte score) {
+		this.data = data;
+		this.ourScore = score;
+	}
+	
 	/*DATA FIELD*/
+	
+	public byte getOurScore() {
+		return this.ourScore;
+	}
+	
+	public void setOurScore(byte s) {
+		this.ourScore = s;
+	}
 	
 	public long getData() {
 		return this.data;
@@ -174,9 +188,9 @@ public class Node {
 		while(currentTime < remainingTime) {
 			long start = System.currentTimeMillis();
 			if(this.childrens.isEmpty()) {
-				byte nodeValue = this.MinMax();
-				
+				byte nodeValue = this.MinMax((byte)2,(byte)-1);
 			}
+			
 			long end = System.currentTimeMillis();
 			currentTime = start - end;
 		}
@@ -196,12 +210,38 @@ public class Node {
 		}
 		for(byte i = 0; i < 6; i++) {
 			if(this.isPlayable(i)) {
-				byte eval = this.play(i).MinMax(depth - 1, -max);
+				byte eval = this.play(i).MinMax((byte)(depth - 1), (byte)-max);
 				score = (byte)( max * Math.min(max * eval, max * score) );
 			}
 		}
 		
 		return score;
+	}
+	
+	public Node play(byte i) {
+		long newData = this.getData();
+		byte nbSeedInHole = this.getNbSeedInAnyHole(i);
+		byte indexLastHole = (byte)((i + nbSeedInHole) % 12);
+		byte a = 0;
+		for(byte j = 1; j <= nbSeedInHole; j++) {
+			if(j % 6 == 0)
+				a += 1;
+			LongMethod.setIVal((byte)(i+a), (byte)(LongMethod.getIVal(i, newData)+1), newData);
+		}
+		if(indexLastHole > 6) {
+			for(byte j = indexLastHole; j >= 7; j--) {
+				byte nb = LongMethod.getIVal(j, newData);
+				if( nb > 1 && nb <= 3) {
+					this.ourScore += nb;
+				}
+				else {
+					break;
+				}
+			}
+		}
+		Node next = new Node(newData);
+		this.addChildren(next);
+		return next;
 	}
 	
 	public boolean isFinish() {
@@ -228,10 +268,6 @@ public class Node {
 	
 	public boolean isWin() {
 		return this.getOurScore() > this.getOpponentScore() ? true : false;  
-	}
-	
-	public byte getOurScore() {
-		return LongMethod.getOurScore(this.getData());
 	}
 	
 	public byte getOpponentScore() {
