@@ -183,12 +183,19 @@ public class Node {
 	}
 	
 	
-	public void developMinMax(long remainingTime) {
+	public void developMinMax(long remainingTime, byte max) {
 		long currentTime = 0;
 		while(currentTime < remainingTime) {
 			long start = System.currentTimeMillis();
 			if(this.childrens.isEmpty()) {
 				byte nodeValue = this.MinMax((byte)2,(byte)-1);
+				// tri du coup et on remonte l'arbre pour maj des scores
+			}
+			else {
+				for (byte i = 0; i < 6; i++){
+					long endtmp = System.currentTimeMillis();
+					this.getChildren(i).developMinMax(remainingTime - endtmp - start, (byte)-max);
+				}
 			}
 			
 			long end = System.currentTimeMillis();
@@ -212,6 +219,7 @@ public class Node {
 			if(this.isPlayable(i)) {
 				byte eval = this.play(i).MinMax((byte)(depth - 1), (byte)-max);
 				score = (byte)( max * Math.min(max * eval, max * score) );
+				// coder le score sur un short un partie sert a coder le score, l'autre partie sert a coder l'indice du trou joué
 			}
 		}
 		
@@ -318,7 +326,7 @@ public class Node {
 		return sum;
 	}
 	
-	public void pruning() {
+	public Node pruning() {
 		List<Node> childrens = this.getFather().getChildrens();
 		if(childrens.size() == 1) { 
 			childrens.get(0).setFather(null);
@@ -331,6 +339,7 @@ public class Node {
 			}
 		}
 		this.getFather().setChildrens(null);
+		return this;
 	}
 
 
