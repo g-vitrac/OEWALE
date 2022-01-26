@@ -48,9 +48,22 @@ public abstract class LongMethod {
 		long maskCP = 0b1111111111111111111111111111111111111111111111111111111111111111L;
 		long mask = 0b11111;
 		
-		maskCP = maskCP ^ (mask << ((i-1) * 5));
+		maskCP = maskCP & ~(mask << ((i-1) * 5));
+		
+		l = maskCP & l;
+		
+		//System.out.println(LongMethod.toBinaryString(l) + "<<");
+
+		
+		maskCP = maskCP | ((mask & value) << ((i-1) * 5));
+		
+		//System.out.println(LongMethod.toBinaryString(maskCP) + "<<");
+
 		
 		l = maskCP | l;			//set the low weighed bits inside 
+		
+		//System.out.println(LongMethod.toBinaryString(l) + "<<");
+
 		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {

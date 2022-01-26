@@ -4,6 +4,7 @@
 package awele.run;
 
 import awele.bot.oewale.Node;
+import utils.LongMethod;
 
 /**
  * @author toxic
@@ -22,10 +23,10 @@ public class test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Node n = new Node(0);
-		n.addChildren(new Node(13));
-		if(n.isPlayable((byte)0)) System.out.println("YES");
-		else System.out.println("NO");
+		Node root = new Node(0b0000000110001100011000110001100011000110001100011011110001100011L);
+		System.out.println(LongMethod.toBinaryString(root.getData()));
+		root.setData(LongMethod.setIVal((byte)2, (byte)5, root.getData()));
+		System.out.println(LongMethod.toBinaryString(root.getData()));
 		
 	}
 
