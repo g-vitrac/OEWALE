@@ -67,6 +67,8 @@ public abstract class LongMethod {
 		//System.out.println(LongMethod.toBinaryString(l) + "<<");
 		
 		
+		  
+		
 		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {
