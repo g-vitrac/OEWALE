@@ -328,12 +328,10 @@ public class Node {
 	
 	public boolean isPlayable(byte i) {
 		
-		//System.out.println(LongMethod.getIVal(i, this.getData()));
 		if(LongMethod.getIVal((byte)(i+1), this.getData()) == 0) {
 			return false;
 		}
 		boolean playable = true;
-		//System.out.println(this.getOpponentNbSeeds());
 		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole(i) + i <= 6) // if our opponent is starving and we can give him seed 
 			playable = false;
 		return playable;

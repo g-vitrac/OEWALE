@@ -43,6 +43,7 @@ public abstract class LongMethod {
 		mask = value & mask; 	//recover the value without the possible high weighed bit
 		mask = mask << ((i-1) * 5);	//shift the mask to the good index		
 		l = mask | l;			//set the low weighed bits inside l
+		l = mask & l;
 		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {
