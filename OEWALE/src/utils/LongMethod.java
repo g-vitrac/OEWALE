@@ -39,6 +39,10 @@ public abstract class LongMethod {
 	 * @return A long with the byte saved at the position i inside the long l.
 	 */
 	public static long setIVal(byte i, byte value, long l) {
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 90aa6eb033112d9906bfc758bd363c64d94fce2b
 		long maskCP = 0b1111111111111111111111111111111111111111111111111111111111111111L;
 		long mask = 0b11111;
 		
