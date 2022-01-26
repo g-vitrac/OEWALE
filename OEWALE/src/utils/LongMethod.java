@@ -55,12 +55,12 @@ public abstract class LongMethod {
 		//System.out.println(LongMethod.toBinaryString(l) + "<<");
 
 		
-		maskCP = maskCP | ((mask & value) << ((i-1) * 5));
+		maskCP = maskCP | ~((mask & value) << ((i-1) * 5));
 		
 		//System.out.println(LongMethod.toBinaryString(maskCP) + "<<");
 
 		
-		l = maskCP | l;			//set the low weighed bits inside 
+		l = ~maskCP | l;			//set the low weighed bits inside 
 		
 		//System.out.println(LongMethod.toBinaryString(l) + "<<");
 
