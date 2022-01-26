@@ -3,6 +3,8 @@ package awele.bot.oewale;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.LongMethod;
+
 public class Node {
 	
 	/**
@@ -60,6 +62,7 @@ public class Node {
 	 * 
 	 */
 	private long data;
+	private byte ourScore;
 	private Node father = null;
 	private List<Node> childrens = new ArrayList<Node>();
 	
@@ -67,7 +70,20 @@ public class Node {
 		this.data = data;	
 	}
 	
+	public Node(long data, byte score) {
+		this.data = data;
+		this.ourScore = score;
+	}
+	
 	/*DATA FIELD*/
+	
+	public byte getOurScore() {
+		return this.ourScore;
+	}
+	
+	public void setOurScore(byte s) {
+		this.ourScore = s;
+	}
 	
 	public long getData() {
 		return this.data;
@@ -167,37 +183,165 @@ public class Node {
 	}
 	
 	
-	public void developMinMax(byte profondeur) {
-		if(this.childrens.isEmpty()) {
-			byte nodeValue = this.MinMax();
+	public void developMinMax(long remainingTime, byte max) {
+		long currentTime = 0;
+		while(currentTime < remainingTime) {
+			long start = System.currentTimeMillis();
+			if(this.childrens.isEmpty()) {
+				byte nodeValue = this.MinMax((byte)2,(byte)-1);
+				// tri du coup et on remonte l'arbre pour maj des scores
+			}
+			else {
+				for (byte i = 0; i < 6; i++){
+					long endtmp = System.currentTimeMillis();
+					this.getChildren(i).developMinMax(remainingTime - endtmp - start, (byte)-max);
+				}
+			}
 			
+			long end = System.currentTimeMillis();
+			currentTime = start - end;
 		}
 	}
 	
-	public byte MinMax(byte profondeur, byte max) {
+	public byte MinMax(byte depth, byte max) {
 		byte score = (byte)(127 * max);			//if max == -1 we are maximizing so score is equal to -127 otherwise it equals 127;
 		
-		if(profondeur == 0) {
-			if(this.iswin())
-				return 50;
-			else if(this.islose())
+		if(depth == 0) {
+			if(this.isFinish()) {
+				if(this.isWin())
+					return 50;
 				return -50;
+			}
 			else
 				return 0;
 		}
-		
-		
 		for(byte i = 0; i < 6; i++) {
-			if(this.jouable(i)) {
-				byte eval = this.jouer(i).MinMax(profondeur - 1, -max);
+			if(this.isPlayable(i)) {
+				byte eval = this.play(i).MinMax((byte)(depth - 1), (byte)-max);
 				score = (byte)( max * Math.min(max * eval, max * score) );
+				// coder le score sur un short un partie sert a coder le score, l'autre partie sert a coder l'indice du trou joué
 			}
 		}
 		
 		return score;
 	}
 	
+	public Node play(byte i) {
+		long newData = this.getData();
+		byte nbSeedInHole = this.getNbSeedInAnyHole(i);
+		byte indexLastHole = (byte)((i + nbSeedInHole) % 12);
+		byte a = 0;
+		for(byte j = 1; j <= nbSeedInHole; j++) {
+			if(j % 6 == 0)
+				a += 1;
+			LongMethod.setIVal((byte)(i+a), (byte)(LongMethod.getIVal(i, newData)+1), newData);
+		}
+		if(indexLastHole > 6) {
+			for(byte j = indexLastHole; j >= 7; j--) {
+				byte nb = LongMethod.getIVal(j, newData);
+				if( nb > 1 && nb <= 3) {
+					this.ourScore += nb;
+				}
+				else {
+					break;
+				}
+			}
+		}
+		Node next = new Node(newData);
+		this.addChildren(next);
+		return next;
+	}
 	
+	public boolean isFinish() {
+		if(this.getAllRemainingSeeds() < 6)
+			return true;
+		Boolean finish = true;
+		for(byte i = 0; i < 6; i++) {
+			if(this.isPlayable(i)) {
+				finish = false;
+			}
+		}
+		return finish;
+	}
+	
+	public boolean isPlayable(byte i) {
+		if(LongMethod.getIVal(i, this.getData()) == 0) {
+			return false;
+		}
+		boolean playable = false;
+		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole(i) >= i) // if our opponent is starving and we can give him seed 
+			playable = true;
+		return playable;
+	}
+	
+	public boolean isWin() {
+		return this.getOurScore() > this.getOpponentScore() ? true : false;  
+	}
+	
+	public byte getOpponentScore() {
+		return (byte) (48 - this.getOurScore() - this.getOurNbSeeds() - this.getOpponentNbSeeds());  
+	}
+	
+	public byte getNbSeedInAnyHole(byte i) {
+		return LongMethod.getIVal((byte)i, this.data);
+	}
+	
+	public byte[] getOurHoles() {
+		byte[] holes = new byte[6];
+		for(byte i = 1; i <= 6; i++) {
+			holes[i] = LongMethod.getIVal((byte)i, this.data);
+		}
+		return holes;
+	}
+	
+	public byte[] getOpponentHoles() {
+		byte[] holes = new byte[6];
+		for(byte i = 7; i <= 12; i++) {
+			holes[i] = LongMethod.getIVal((byte)i, this.data);
+		}
+		return holes;
+	}
+	
+	public byte getOurNbSeeds() {
+		byte sum = 0;
+		for(byte i = 1; i <= 6; i++) {
+			sum += LongMethod.getIVal((byte)i, this.data);
+		}
+		return sum;
+	}
+	
+	public byte getOpponentNbSeeds() {
+		byte sum = 0;
+		for(byte i = 7; i <= 12; i++) {
+			sum += LongMethod.getIVal((byte)i, this.data);
+		}
+		return sum;
+	}
+	
+	public byte getAllRemainingSeeds() {
+		byte sum = 0;
+		for(byte i = 1; i <= 12; i++) {
+			sum += LongMethod.getIVal((byte)i, this.data);
+		}
+		return sum;
+	}
+	
+	public Node pruning() {
+		List<Node> childrens = this.getFather().getChildrens();
+		if(childrens.size() == 1) { 
+			childrens.get(0).setFather(null);
+		}
+		else {
+			for(byte i = 1; i < childrens.size(); i++) {
+				Node n = childrens.get(i);
+				n.setChildrens(null);
+				n.setFather(null);
+			}
+		}
+		this.getFather().setChildrens(null);
+		return this;
+	}
+
 
 	@Override
 	public boolean equals(Object obj) {
