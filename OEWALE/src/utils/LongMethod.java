@@ -39,11 +39,18 @@ public abstract class LongMethod {
 	 * @return A long with the byte saved at the position i inside the long l.
 	 */
 	public static long setIVal(byte i, byte value, long l) {
-		long mask = 0b11111;
+		//long mask = 0b11111;
+		/*
 		mask = value & mask; 	//recover the value without the possible high weighed bit
-		mask = mask << ((i-1) * 5);	//shift the mask to the good index		
-		l = mask | l;			//set the low weighed bits inside l
-		l = mask & l;
+		mask = mask << ((i-1) * 5);	//shift the mask to the good index
+		*/
+		
+		long maskCP = 0b1111111111111111111111111111111111111111111111111111111111111111L;
+		long mask = 0b11111;
+		
+		maskCP = maskCP ^ (mask << ((i-1) * 5));
+		
+		l = maskCP | l;			//set the low weighed bits inside 
 		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {

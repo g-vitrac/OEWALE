@@ -26,6 +26,7 @@ public class test {
 		n.addChildren(new Node(13));
 		if(n.isPlayable((byte)0)) System.out.println("YES");
 		else System.out.println("NO");
+		
 	}
 
 }
