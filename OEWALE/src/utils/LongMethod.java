@@ -46,9 +46,11 @@ public abstract class LongMethod {
 		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {
-			mask = i;			//save the position of the index where the overflow occured
-			System.out.println(LongMethod.toBinaryString(mask));
+			mask = i;			//save the position of the index where the overflow occurred
+								System.out.println(LongMethod.toBinaryString(mask));
 			l = l | (mask << 59);	//write it in the 4 free bits at the end of the long
+								System.out.println(LongMethod.toBinaryString(l));
+
 		}		
 		return l;
 	}
