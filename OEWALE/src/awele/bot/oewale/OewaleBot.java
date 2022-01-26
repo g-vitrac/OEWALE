@@ -30,7 +30,7 @@ public class OewaleBot extends CompetitorBot{
 		Node bestMove = actualState.getChildren(0); // because our best move is always the first
 		
 		double[] nextBoard = new double[6];
-		nextBoard[0] = this.getIndexHolePlayed(root, bestMove); 
+		nextBoard[indice trou joué] = 1;
 		root = bestMove.pruning(); // removing all useless nodes in the tree where best move is now the root and update root field
 		long end = System.currentTimeMillis();
 		long remainingTime = MAX_DECISION_TIME - end - start - 5;
@@ -38,15 +38,7 @@ public class OewaleBot extends CompetitorBot{
 		return nextBoard;
 	}
 
-	private byte getIndexHolePlayed(Node root, Node bestMove) {
-		
-		byte[] rootOurHole = root.getOurHoles();
-		byte[] rootOpponentHole = root.getOpponentHoles();
-		
-		byte[] bestMoveOurHole = bestMove.getOurHoles();
-		byte[] bestMoveOpponentHole = bestMove.getOpponentHoles();
-		return 0;
-	}
+
 
 	@Override
 	public void learn() {

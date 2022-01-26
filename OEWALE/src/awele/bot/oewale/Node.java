@@ -190,8 +190,8 @@ public class Node {
 		while(currentTime < remainingTime) {
 			long start = System.currentTimeMillis();
 			if(this.childrens.isEmpty()) {
-				byte nodeValue = this.MinMax((byte)2,(byte)-1);
-				// tri du coup et on remonte l'arbre pour maj des scores
+				byte nodeValue = this.MinMax((byte)2,(byte)-max);
+				this.sortNode(nodeValue, (byte)-max);
 			}
 			else {
 				for (byte i = 0; i < 6; i++){
@@ -199,9 +199,44 @@ public class Node {
 					this.getChildren(i).developMinMax(remainingTime - endtmp - start, (byte)-max);
 				}
 			}
-			
 			long end = System.currentTimeMillis();
 			currentTime = start - end;
+		}
+	}
+	
+	public void sortNode(byte nodeValue, byte max) {
+		if(this.getFather() != null) {
+			List<Node> childrens = this.getFather().getChildrens();
+			int index = childrens.indexOf(this);
+			if(max == -1) {
+				while(index >= 0) {
+					if(childrens.get(index).getNodeData() > nodeValue) {
+						this.swapWithChildren(childrens.get(index--));
+						this.getFather().setNodeValue(nodeValue);
+					}
+					else if(childrens.get(index).getNodeData() < nodeValue)){
+						this.swapWithChildren(childrens.get(index++));
+					}
+					else {
+						break;
+					}
+				}
+			}
+			else {
+				while(index <= childrens.size()) {
+					if(childrens.get(index).getNodeData() > nodeValue) {
+						this.swapWithChildren(childrens.get(index++));
+					}
+					else if(childrens.get(index).getNodeData() < nodeValue)){
+						this.swapWithChildren(childrens.get(index--));
+						this.getFather().setNodeValue(nodeValue);
+					}
+					else {
+						break;
+					}
+				}
+			}
+			this.getFather().sortNode(this.getFather().getNodeValue(), -max);
 		}
 	}
 	
