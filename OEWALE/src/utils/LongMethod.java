@@ -39,11 +39,6 @@ public abstract class LongMethod {
 	 * @return A long with the byte saved at the position i inside the long l.
 	 */
 	public static long setIVal(byte i, byte value, long l) {
-		//long mask = 0b11111;
-		/*
-		mask = value & mask; 	//recover the value without the possible high weighed bit
-		mask = mask << ((i-1) * 5);	//shift the mask to the good index
-		*/
 		
 		long maskCP = 0b1111111111111111111111111111111111111111111111111111111111111111L;
 		long mask = 0b11111;
@@ -51,19 +46,12 @@ public abstract class LongMethod {
 		maskCP = maskCP & ~(mask << ((i-1) * 5));
 		
 		l = maskCP & l;
-		
-		//System.out.println(LongMethod.toBinaryString(l) + "<<");
-
-		
 		maskCP = maskCP | ~((mask & value) << ((i-1) * 5));
-		
-		//System.out.println(LongMethod.toBinaryString(maskCP) + "<<");
-
-		
 		l = ~maskCP | l;			//set the low weighed bits inside 
 		
-		//System.out.println(LongMethod.toBinaryString(l) + "<<");
-
+		if(l >>> 60 > 0 & (l >>> 60) == i) {
+			l = l & ~(0b1111 << 60);
+		}
 		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {
