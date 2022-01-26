@@ -24,8 +24,8 @@ Instanciation du bot "First"
 Nom du bot : First
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 608 B
-Usage mémoire maximum : 398,2 KiB
+Usage mémoire : 592 B
+Usage mémoire maximum : 411,6 KiB
 
 Bot 3/7
 Classe : awele.bot.last.LastBot
@@ -33,26 +33,26 @@ Instanciation du bot "Last"
 Nom du bot : Last
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 672 B
-Usage mémoire maximum : 420,9 KiB
+Usage mémoire : 896 B
+Usage mémoire maximum : 420,8 KiB
 
 Bot 4/7
 Classe : awele.bot.minmax.MinMaxBot
 Instanciation du bot "MinMax"
 Nom du bot : MinMax
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.048
+Durée d'une prise de décision : 00:00:00.051
 Usage mémoire : 1,5 KiB
-Usage mémoire maximum : 47,5 MiB
+Usage mémoire maximum : 122,0 MiB
 
 Bot 5/7
 Classe : awele.bot.knn2.Knn2Bot
 Instanciation du bot "k-NN2"
 Nom du bot : k-NN2
-Temps d'apprentissage : 00:00:00.007
+Temps d'apprentissage : 00:00:00.006
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 26,6 KiB
-Usage mémoire maximum : 2,0 MiB
+Usage mémoire : 25,9 KiB
+Usage mémoire maximum : 1,4 MiB
 
 Bot 6/7
 Classe : awele.bot.oewale.OewaleBot

@@ -33,7 +33,6 @@ public class OewaleBot extends CompetitorBot{
 		long start = System.currentTimeMillis();
 		long lboard = convertBoard(board); //board to long conversion 
 		Node actualState = root.search(lboard); //search long in the minmax tree
-		System.out.println(actualState);
 		Node bestMove = actualState.getChildren(0); // because our best move is always the first
 		double[] nextBoard = new double[6];
 		nextBoard[bestMove.getIndexPlayedHole()] = 1;
@@ -44,12 +43,10 @@ public class OewaleBot extends CompetitorBot{
 		return nextBoard;
 	}
 
-
-
 	@Override
 	public void learn() {
 		root = new Node(0b0000001000010000100001000010000100001000010000100001000010000100L);
-		root.developMinMax(2000, (byte)-1);
+		root.developMinMax(50, (byte)-1);
 	}
 	
 	private long convertBoard(Board board) {

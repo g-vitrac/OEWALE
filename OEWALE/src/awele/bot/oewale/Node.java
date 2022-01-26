@@ -177,25 +177,25 @@ public class Node {
 	/*UTILS METHODS*/
 	
 	public Node search(long board) {
+		if(this.getData() == board)
+			return this;
 		for(Node n : this.getChildrens()) {
-			if(n.getData() == board)
-				return n;
+			n.search(board);
 		}
-		return null; // is our case we normally shouldn't return null
+		return null;
 	}
+	
 	
 	
 	public void developMinMax(long remainingTime, byte max) {
 		long currentTime = 0;
 		while(currentTime < remainingTime) {
 			long start = System.currentTimeMillis();
+			
 			if(this.childrens.isEmpty()) {
 				byte nodeValue = this.MinMax((byte)2,(byte)-max);
-				System.out.println("nodeValue = " + nodeValue);
-				
-				
-				System.exit(1);
-				this.sortNode(nodeValue, (byte)-max);
+				this.setNodeScore(nodeValue);
+				this.sortNode((byte)-max);
 				long endtmp = System.currentTimeMillis();
 				remainingTime -= endtmp - start;
 			}
@@ -203,24 +203,25 @@ public class Node {
 				for(Node n : this.getChildrens()) {
 					long endtmp = System.currentTimeMillis();
 					remainingTime -= endtmp - start;
-					n.developMinMax(remainingTime, (byte)-max);
+					if(remainingTime > 5)
+						n.developMinMax(remainingTime, (byte)-max);
 				}
 			}
 		}
 	}
 	
-	public void sortNode(byte nodeValue, byte max) {
+	public void sortNode(byte max) {
+		//System.out.println(this.getFather());
 		if(this.getFather() != null) {
 			List<Node> childrens = this.getFather().getChildrens();
 			int index = childrens.indexOf(this);
 			if(max == -1) {
-				while(index >= 0) {
-					if(childrens.get(index).getNodeScore() > nodeValue) {
-						this.swapWithChildren(childrens.get(index--));
-						this.getFather().setNodeScore(nodeValue);
+				while(index > 0 && index < childrens.size()) {
+					if(childrens.get(index-1).getNodeScore() < this.getNodeScore()) {
+						this.swapWithChildren(childrens.get(--index));
 					}
-					else if(childrens.get(index).getNodeScore() < nodeValue){
-						this.swapWithChildren(childrens.get(index++));
+					else if(childrens.get(index+1).getNodeScore() > this.getNodeScore()){
+						this.swapWithChildren(childrens.get(++index));
 					}
 					else {
 						break;
@@ -228,81 +229,81 @@ public class Node {
 				}
 			}
 			else {
-				while(index <= childrens.size()) {
-					if(childrens.get(index).getNodeScore() > nodeValue) {
-						this.swapWithChildren(childrens.get(index++));
+				while(index > 0 && index < childrens.size()) {
+					if(childrens.get(index+1).getNodeScore() < this.getNodeScore()) {
+						this.swapWithChildren(childrens.get(++index));
 					}
-					else if(childrens.get(index).getNodeScore() < nodeValue){
-						this.swapWithChildren(childrens.get(index--));
-						this.getFather().setNodeScore(nodeValue);
+					else if(childrens.get(index-1).getNodeScore() > this.getNodeScore()){
+						this.swapWithChildren(childrens.get(--index));
 					}
 					else {
 						break;
 					}
 				}
 			}
-			//System.out.println(this);
-			this.getFather().sortNode(this.getFather().getNodeScore(), (byte)-max);
+			this.getFather().setNodeScore(childrens.get(0).getNodeScore());
+			this.getFather().sortNode((byte)-max);
 		}
 	}
 	
 	public byte MinMax(byte depth, byte max) {
-		System.out.println("Dans MinMax [profondeur : " + depth + ", max : " + max);
 		byte score = (byte)(127 * max);			//if max == -1 we are maximizing so score is equal to -127 otherwise it equals 127;
 		if(depth == 0) {
-			System.out.println("depth == 0");
 			if(this.isFinish()) {
-				System.out.println("Game Finish");
 				if(this.isWin()) {
-					System.out.println("game Win");
-					return 2;
+					return 10;
 				}
-				System.out.println("Game lose");
-				return -2;
+				return -10;
 			}
 			else
-				System.out.println("DRAW");
 				return 0;
 		}
+		byte offset = 0;
+		if(max == 1) offset = 6; // si on est sur un min c'est l'adversaire qui joue donc ses trous sont à +6 si on a une boucle qui va de 0 à 5
 		for(byte i = 0; i < 6; i++) {
-			System.out.println("depth != 0");
-			if(this.isPlayable(i)) {
-				System.out.println("Trou indice " + i + " jouable");
-				//System.out.println("I ===================== " + i);
-				byte eval = this.play(i).MinMax((byte)(depth - 1), (byte)-max);
+			if(this.isPlayable((byte)(i+ offset))) {
+				byte eval = this.play((byte)(i+offset), (byte)-max).MinMax((byte)(depth - 1), (byte)-max);
 				byte storeScore = score;
 				score = (byte)( max * Math.min(max * eval, max * score) );
 				if((storeScore < score && max == 1) || (storeScore > score && max == -1)) {
 					indexPlayedHole = i;
 				}
-				// coder le score sur un short un partie sert a coder le score, 
-				//l'autre partie sert a coder l'indice du trou joué
 			}
-			System.out.println("Trou indice " + i + " pas jouable");
 		}
-		
 		return score;
 	}
 	
-	public Node play(byte i) {
-		byte i1 =  (byte) (i + 1);
+	public Node play(byte i, byte max) {
+		byte holeIndex =  (byte) (i + 1);
 		long newData = this.getData();
-		byte nbSeedInHole = this.getNbSeedInAnyHole(i1);
-		byte indexLastHole = (byte)((i1 + nbSeedInHole) % 12);
-		byte cpt = (byte) (i1 + 1);
-		
-		
+		byte nbSeedInHole = this.getNbSeedInAnyHole(holeIndex);
+		byte indexLastHole = (byte)(((holeIndex + nbSeedInHole) % 12));
+		byte cpt = (byte) (holeIndex + 1);
+		if(cpt > 12) cpt = 1;
 		for(byte j = nbSeedInHole; j > 0; j--) {
-			LongMethod.setIVal(cpt++, (byte)(LongMethod.getIVal(cpt, newData)+1), newData);
+			newData = LongMethod.setIVal(cpt, (byte)(LongMethod.getIVal(cpt, newData)+1), newData);
+			cpt++;
 			if(cpt > 12) cpt = 1;
-			if(cpt == i1) cpt++;
+			if(cpt == holeIndex) cpt++;
 		}
-		
-		if(indexLastHole > 6) {
+		newData = LongMethod.setIVal(holeIndex, (byte)0, newData);
+		if(max == -1 && indexLastHole > 6) {
 			for(byte j = indexLastHole; j >= 7; j--) {
 				byte nb = LongMethod.getIVal(j, newData);
 				if( nb > 1 && nb <= 3) {
 					this.ourScore += nb;
+					newData = LongMethod.setIVal(j, (byte)0, newData);
+				}
+				else {
+					break;
+				}
+			}
+		}else if(max == 1 && indexLastHole < 6) {
+			for(byte j = indexLastHole; j >= 0; j--) {
+				byte nb = LongMethod.getIVal(j, newData);
+				if( nb > 1 && nb <= 3) {
+					this.ourScore += nb;
+					newData = LongMethod.setIVal(j, (byte)0, newData);
 				}
 				else {
 					break;
@@ -332,7 +333,7 @@ public class Node {
 			return false;
 		}
 		boolean playable = true;
-		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole(i) + i <= 6) // if our opponent is starving and we can give him seed 
+		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole((byte)(i+1)) + i <= 6) // if our opponent is starving and we can give him seed 
 			playable = false;
 		return playable;
 	}
