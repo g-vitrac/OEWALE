@@ -276,10 +276,15 @@ public class Node {
 	public Node play(byte i, byte max) {
 		byte holeIndex =  (byte) (i + 1);
 		long newData = this.getData();
+
 		byte nbSeedInHole = this.getNbSeedInAnyHole(holeIndex);
 		byte indexLastHole = (byte)(((holeIndex + nbSeedInHole) % 12));
 		byte cpt = (byte) (holeIndex + 1);
 		if(cpt > 12) cpt = 1;
+
+		
+				
+
 		for(byte j = nbSeedInHole; j > 0; j--) {
 			newData = LongMethod.setIVal(cpt, (byte)(LongMethod.getIVal(cpt, newData)+1), newData);
 			cpt++;
@@ -288,11 +293,13 @@ public class Node {
 		}
 		newData = LongMethod.setIVal(holeIndex, (byte)0, newData);
 		if(max == -1 && indexLastHole > 6) {
+
 			for(byte j = indexLastHole; j >= 7; j--) {
 				byte nb = LongMethod.getIVal(j, newData);
 				if( nb > 1 && nb <= 3) {
 					this.ourScore += nb;
 					newData = LongMethod.setIVal(j, (byte)0, newData);
+
 				}
 				else {
 					break;

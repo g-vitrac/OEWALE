@@ -25,6 +25,7 @@ public class test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
 		/*					  
 		Node root = new Node(0b0000000110001100011000110001100011000110001100011011110001100011L);
 		System.out.println(LongMethod.toBinaryString(root.getData()));
@@ -32,6 +33,27 @@ public class test {
 		System.out.println(LongMethod.toBinaryString(a.getData()));
 		Node b = a.play((byte)4);
 		System.out.println(LongMethod.toBinaryString(b.getData()));
+
+		                      
+		Node root = new Node(0b0000000110001100011000110001100011000110001100011011110001100011L);
+		root.setData(LongMethod.setIVal((byte)2, (byte)5, root.getData()));
+		System.out.println(LongMethod.toBinaryString(root.getData()));
+		
+		/*                     
+		Node root = new Node(0b0000000110001100011000110001100011000110001100011011110001100011L);
+		System.out.println(LongMethod.toBinaryString(root.getData()));
+		Node a = root.play((byte)2);
+		System.out.println(LongMethod.toBinaryString(a.getData()));
+		*/
+		
+		/*
+		Node root = new Node(0b0000000110001100011000110001100011000110001100011000110001100011L);
+		System.out.println(LongMethod.toBinaryString(root.getData()));
+		Node a = root.play((byte)2);
+		System.out.println(LongMethod.toBinaryString(a.getData()));
+		//a = root.play((byte)0);
+		//System.out.println(LongMethod.toBinaryString(a.getData()));
+
 		*/
 	}
 }

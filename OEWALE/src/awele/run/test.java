@@ -66,7 +66,7 @@ public class test {
 		System.out.println(LongMethod.toBinaryString(b.getData()));
 		*/
 		
-		 /*
+		/* 
 		Node a = new Node(0b0000000000000000000000000000000000000000000000000000000000000011L);
 		System.out.println(a.getNbSeedInAnyHole((byte)1));
 		System.out.println(a.getOpponentNbSeeds());
