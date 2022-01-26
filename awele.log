@@ -26,8 +26,8 @@ Nom du bot : First
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 848 B
-Usage mémoire maximum : 411,6 KiB
+Usage mémoire : 608 B
+Usage mémoire maximum : 398,2 KiB
 
 Bot 3/7
 Classe : awele.bot.last.LastBot
@@ -37,7 +37,7 @@ Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
 Usage mémoire : 672 B
-Usage mémoire maximum : 428,9 KiB
+Usage mémoire maximum : 420,9 KiB
 
 Bot 4/7
 Classe : awele.bot.minmax.MinMaxBot
@@ -45,9 +45,9 @@ Instanciation du bot "MinMax"
 Nom du bot : MinMax
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.068
+Durée d'une prise de décision : 00:00:00.048
 Usage mémoire : 1,5 KiB
-Usage mémoire maximum : 68,0 MiB
+Usage mémoire maximum : 47,5 MiB
 
 Bot 5/7
 Classe : awele.bot.knn2.Knn2Bot
@@ -56,46 +56,11 @@ Nom du bot : k-NN2
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.007
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 25,9 KiB
-Usage mémoire maximum : 1,6 MiB
+Usage mémoire : 26,6 KiB
+Usage mémoire maximum : 2,0 MiB
 
 Bot 6/7
 Classe : awele.bot.oewale.OewaleBot
-Nom du bot : 
-Bot "awele.bot.oewale.OewaleBot" disqualifié : ne peut pas être instancié
-java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
-
-Bot 7/7
-Classe : awele.bot.knn1.Knn1Bot
-Instanciation du bot "k-NN1"
-Nom du bot : k-NN1
-Auteur(s) : Alexandre Blansché
-Temps d'apprentissage : 00:00:00.002
-Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 12,6 KiB
-Usage mémoire maximum : 1,0 MiB
-
-6 bots ont été instanciés
-Durée du chargement : 00:00:02.664
-Mémoire utilisée : 3,6 MiB
-
-Que le championnat commence !
-
-Affrontement 1/15
-Random vs. First
-Score : 1.57 - 1.42
-Random a gagné
-Nombre de coups joués : 148.175 par match
-Durée : 00:00:00.000 par match
-Mémoire utilisée : 3,6 MiB
-
-Affrontement 2/15
-Random vs. Last
-Score : 0.13 - 2.86
-Last a gagné
-Nombre de coups joués : 108.05 par match
-Durée : 00:00:00.000 par match
-Mémoire utilisée : 3,6 MiB
-
-Affrontement 3/15
-Random vs. MinMax
+Instanciation du bot "Oewale"
+Nom du bot : Oewale
+Auteur(s) : Wati team

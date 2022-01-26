@@ -191,16 +191,21 @@ public class Node {
 			long start = System.currentTimeMillis();
 			if(this.childrens.isEmpty()) {
 				byte nodeValue = this.MinMax((byte)2,(byte)-max);
+				System.out.println("nodeValue = " + nodeValue);
+				
+				
+				System.exit(1);
 				this.sortNode(nodeValue, (byte)-max);
+				long endtmp = System.currentTimeMillis();
+				remainingTime -= endtmp - start;
 			}
 			else {
-				for (byte i = 0; i < 6; i++){
+				for(Node n : this.getChildrens()) {
 					long endtmp = System.currentTimeMillis();
-					this.getChildren(i).developMinMax(remainingTime - endtmp - start, (byte)-max);
+					remainingTime -= endtmp - start;
+					n.developMinMax(remainingTime, (byte)-max);
 				}
 			}
-			long end = System.currentTimeMillis();
-			currentTime = start - end;
 		}
 	}
 	
@@ -210,11 +215,11 @@ public class Node {
 			int index = childrens.indexOf(this);
 			if(max == -1) {
 				while(index >= 0) {
-					if(childrens.get(index).getNodeData() > nodeValue) {
+					if(childrens.get(index).getNodeScore() > nodeValue) {
 						this.swapWithChildren(childrens.get(index--));
-						this.getFather().setNodeValue(nodeValue);
+						this.getFather().setNodeScore(nodeValue);
 					}
-					else if(childrens.get(index).getNodeData() < nodeValue)){
+					else if(childrens.get(index).getNodeScore() < nodeValue){
 						this.swapWithChildren(childrens.get(index++));
 					}
 					else {
@@ -224,36 +229,46 @@ public class Node {
 			}
 			else {
 				while(index <= childrens.size()) {
-					if(childrens.get(index).getNodeData() > nodeValue) {
+					if(childrens.get(index).getNodeScore() > nodeValue) {
 						this.swapWithChildren(childrens.get(index++));
 					}
-					else if(childrens.get(index).getNodeData() < nodeValue)){
+					else if(childrens.get(index).getNodeScore() < nodeValue){
 						this.swapWithChildren(childrens.get(index--));
-						this.getFather().setNodeValue(nodeValue);
+						this.getFather().setNodeScore(nodeValue);
 					}
 					else {
 						break;
 					}
 				}
 			}
-			this.getFather().sortNode(this.getFather().getNodeValue(), -max);
+			//System.out.println(this);
+			this.getFather().sortNode(this.getFather().getNodeScore(), (byte)-max);
 		}
 	}
 	
 	public byte MinMax(byte depth, byte max) {
+		System.out.println("Dans MinMax [profondeur : " + depth + ", max : " + max);
 		byte score = (byte)(127 * max);			//if max == -1 we are maximizing so score is equal to -127 otherwise it equals 127;
-		
 		if(depth == 0) {
+			System.out.println("depth == 0");
 			if(this.isFinish()) {
-				if(this.isWin())
-					return 50;
-				return -50;
+				System.out.println("Game Finish");
+				if(this.isWin()) {
+					System.out.println("game Win");
+					return 2;
+				}
+				System.out.println("Game lose");
+				return -2;
 			}
 			else
+				System.out.println("DRAW");
 				return 0;
 		}
 		for(byte i = 0; i < 6; i++) {
+			System.out.println("depth != 0");
 			if(this.isPlayable(i)) {
+				System.out.println("Trou indice " + i + " jouable");
+				//System.out.println("I ===================== " + i);
 				byte eval = this.play(i).MinMax((byte)(depth - 1), (byte)-max);
 				byte storeScore = score;
 				score = (byte)( max * Math.min(max * eval, max * score) );
@@ -263,21 +278,26 @@ public class Node {
 				// coder le score sur un short un partie sert a coder le score, 
 				//l'autre partie sert a coder l'indice du trou joué
 			}
+			System.out.println("Trou indice " + i + " pas jouable");
 		}
 		
 		return score;
 	}
 	
 	public Node play(byte i) {
+		byte i1 =  (byte) (i + 1);
 		long newData = this.getData();
-		byte nbSeedInHole = this.getNbSeedInAnyHole(i);
-		byte indexLastHole = (byte)((i + nbSeedInHole) % 12);
-		byte a = 0;
-		for(byte j = 1; j <= nbSeedInHole; j++) {
-			if(j % 6 == 0)
-				a += 1;
-			LongMethod.setIVal((byte)(i+a), (byte)(LongMethod.getIVal(i, newData)+1), newData);
+		byte nbSeedInHole = this.getNbSeedInAnyHole(i1);
+		byte indexLastHole = (byte)((i1 + nbSeedInHole) % 12);
+		byte cpt = (byte) (i1 + 1);
+		
+		
+		for(byte j = nbSeedInHole; j > 0; j--) {
+			LongMethod.setIVal(cpt++, (byte)(LongMethod.getIVal(cpt, newData)+1), newData);
+			if(cpt > 12) cpt = 1;
+			if(cpt == i1) cpt++;
 		}
+		
 		if(indexLastHole > 6) {
 			for(byte j = indexLastHole; j >= 7; j--) {
 				byte nb = LongMethod.getIVal(j, newData);
@@ -307,12 +327,15 @@ public class Node {
 	}
 	
 	public boolean isPlayable(byte i) {
-		if(LongMethod.getIVal(i, this.getData()) == 0) {
+		
+		//System.out.println(LongMethod.getIVal(i, this.getData()));
+		if(LongMethod.getIVal((byte)(i+1), this.getData()) == 0) {
 			return false;
 		}
-		boolean playable = false;
-		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole(i) >= i) // if our opponent is starving and we can give him seed 
-			playable = true;
+		boolean playable = true;
+		//System.out.println(this.getOpponentNbSeeds());
+		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole(i) + i <= 6) // if our opponent is starving and we can give him seed 
+			playable = false;
 		return playable;
 	}
 	
@@ -369,18 +392,7 @@ public class Node {
 	}
 	
 	public Node pruning() {
-		List<Node> childrens = this.getFather().getChildrens();
-		if(childrens.size() == 1) { 
-			childrens.get(0).setFather(null);
-		}
-		else {
-			for(byte i = 1; i < childrens.size(); i++) {
-				Node n = childrens.get(i);
-				n.setChildrens(null);
-				n.setFather(null);
-			}
-		}
-		this.getFather().setChildrens(null);
+		this.setFather(null);
 		return this;
 	}
 

@@ -2,6 +2,7 @@ package awele.bot.oewale;
 
 import awele.bot.CompetitorBot;
 import awele.core.Board;
+import awele.core.InvalidBotException;
 import utils.LongMethod;
 
 public class OewaleBot extends CompetitorBot{
@@ -10,6 +11,11 @@ public class OewaleBot extends CompetitorBot{
 	 private static final int MAX_LEARNING_TIME = 1000 * 60 * 60 * 1; // 1 h
 	
 	private Node root;
+	
+	public OewaleBot() throws InvalidBotException {
+		this.setBotName ("Oewale");
+        this.addAuthor ("Wati team");
+	}
 	
 
 	@Override
@@ -27,10 +33,10 @@ public class OewaleBot extends CompetitorBot{
 		long start = System.currentTimeMillis();
 		long lboard = convertBoard(board); //board to long conversion 
 		Node actualState = root.search(lboard); //search long in the minmax tree
+		System.out.println(actualState);
 		Node bestMove = actualState.getChildren(0); // because our best move is always the first
-		
 		double[] nextBoard = new double[6];
-		nextBoard[indice trou joué] = 1;
+		nextBoard[bestMove.getIndexPlayedHole()] = 1;
 		root = bestMove.pruning(); // removing all useless nodes in the tree where best move is now the root and update root field
 		long end = System.currentTimeMillis();
 		long remainingTime = MAX_DECISION_TIME - end - start - 5;
@@ -43,6 +49,7 @@ public class OewaleBot extends CompetitorBot{
 	@Override
 	public void learn() {
 		root = new Node(0b0000001000010000100001000010000100001000010000100001000010000100L);
+		root.developMinMax(2000, (byte)-1);
 	}
 	
 	private long convertBoard(Board board) {
