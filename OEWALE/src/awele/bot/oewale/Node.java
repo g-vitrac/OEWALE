@@ -63,6 +63,8 @@ public class Node {
 	 */
 	private long data;
 	private byte ourScore;
+	private byte nodeScore;
+	private byte indexPlayedHole;
 	private Node father = null;
 	private List<Node> childrens = new ArrayList<Node>();
 	
@@ -218,8 +220,13 @@ public class Node {
 		for(byte i = 0; i < 6; i++) {
 			if(this.isPlayable(i)) {
 				byte eval = this.play(i).MinMax((byte)(depth - 1), (byte)-max);
+				byte storeScore = score;
 				score = (byte)( max * Math.min(max * eval, max * score) );
-				// coder le score sur un short un partie sert a coder le score, l'autre partie sert a coder l'indice du trou joué
+				if((storeScore < score && max == 1) || (storeScore > score && max == -1)) {
+					indexPlayedHole = i;
+				}
+				// coder le score sur un short un partie sert a coder le score, 
+				//l'autre partie sert a coder l'indice du trou joué
 			}
 		}
 		
@@ -366,6 +373,35 @@ public class Node {
 	@Override
 	public String toString() {
 		return "[d: " + this.data + " f: " + this.father + " nbC: " + this.getChildrens().size() + "]";
+	}
+
+
+	/**
+	 * @return the nodeScore
+	 */
+	public byte getNodeScore() {
+		return nodeScore;
+	}
+
+	/**
+	 * @param nodeScore the nodeScore to set
+	 */
+	public void setNodeScore(byte nodeScore) {
+		this.nodeScore = nodeScore;
+	}
+
+	/**
+	 * @return the indexPlayedHole
+	 */
+	public byte getIndexPlayedHole() {
+		return indexPlayedHole;
+	}
+
+	/**
+	 * @param indexPlayedHole the indexPlayedHole to set
+	 */
+	public void setIndexPlayedHole(byte indexPlayedHole) {
+		this.indexPlayedHole = indexPlayedHole;
 	}
 }
 

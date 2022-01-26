@@ -11,6 +11,13 @@ import awele.core.Board;
  */
 public class test {
 
+	/**
+	 * 
+	 */
+	public test() {
+		// TODO Auto-generated constructor stub
+	}
+
 	private static long convertBoard(Board board) {
 		long lboard = 0;
 		for(byte i = 0; i < 6; i++)
@@ -24,13 +31,18 @@ public class test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		/*
 		for(int i = 1; i <= 12; i++) {
 			long l = 0;
-			l = LongMethod.setIVal((byte)i, (byte)48, l);
-												//System.out.println(LongMethod.toBinaryString(l));
+			l = LongMethod.setIVal((byte)i, (byte)32, l);
+			//System.out.println(LongMethod.toBinaryString(l));
 			byte b = LongMethod.getIVal((byte)i, l);
-												//System.out.println(b);
-												//System.out.println(Integer.toBinaryString(Byte.toUnsignedInt(b)));
+<<<<<<< HEAD
+			//System.out.println(Integer.toBinaryString(Byte.toUnsignedInt(b)));
 		}
+=======
+			System.out.println(Integer.toBinaryString(Byte.toUnsignedInt(b)));
+		}*/
+>>>>>>> 654030acc502b77478d77f3cf41d02602563084f
 	}
 }
