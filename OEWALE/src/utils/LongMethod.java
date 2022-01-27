@@ -64,12 +64,10 @@ public abstract class LongMethod {
 		
 		l = maskCP & l;			//set the low weighed bits inside 
 		
+		
+		
+		
 		//System.out.println(LongMethod.toBinaryString(l) + "<<");
-		
-		
-		  
-		
-		
 		//check if their is an overflow
 		if((value >>> 5) > 0) {
 			mask = i;			//save the position of the index where the overflow occurred
