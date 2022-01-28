@@ -1,11 +1,16 @@
 package awele.bot.oewale;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import utils.LongMethod;
 
 public class Node {
+	
+	public void sort() {
+		
+	}
 	
 	/**
 	 * We store the state of the game in one long. 
@@ -185,13 +190,11 @@ public class Node {
 		return null;
 	}
 	
-	
-	
+
 	public void developMinMax(long remainingTime, byte max) {
 		long currentTime = 0;
 		while(currentTime < remainingTime) {
 			long start = System.currentTimeMillis();
-			
 			if(this.childrens.isEmpty()) {
 				byte nodeValue = this.MinMax((byte)2,(byte)-max);
 				this.setNodeScore(nodeValue);
@@ -203,45 +206,21 @@ public class Node {
 				for(Node n : this.getChildrens()) {
 					long endtmp = System.currentTimeMillis();
 					remainingTime -= endtmp - start;
-					if(remainingTime > 5)
+					if(remainingTime > 5) {
 						n.developMinMax(remainingTime, (byte)-max);
+					}
 				}
 			}
 		}
 	}
 	
 	public void sortNode(byte max) {
-		//System.out.println(this.getFather());
 		if(this.getFather() != null) {
-			List<Node> childrens = this.getFather().getChildrens();
-			int index = childrens.indexOf(this);
-			if(max == -1) {
-				while(index > 0 && index < childrens.size()) {
-					if(childrens.get(index-1).getNodeScore() < this.getNodeScore()) {
-						this.swapWithChildren(childrens.get(--index));
-					}
-					else if(childrens.get(index+1).getNodeScore() > this.getNodeScore()){
-						this.swapWithChildren(childrens.get(++index));
-					}
-					else {
-						break;
-					}
-				}
-			}
-			else {
-				while(index > 0 && index < childrens.size()) {
-					if(childrens.get(index+1).getNodeScore() < this.getNodeScore()) {
-						this.swapWithChildren(childrens.get(++index));
-					}
-					else if(childrens.get(index-1).getNodeScore() > this.getNodeScore()){
-						this.swapWithChildren(childrens.get(--index));
-					}
-					else {
-						break;
-					}
-				}
-			}
-			this.getFather().setNodeScore(childrens.get(0).getNodeScore());
+			if(max == -1)
+				this.getFather().getChildrens().sort(Comparator.comparing(Node::getNodeScore));
+			else
+				this.getFather().getChildrens().sort(Comparator.comparing(Node::getNodeScore).reversed());
+			this.getFather().setNodeScore(this.getFather().getChildrens().get(0).getNodeScore());
 			this.getFather().sortNode((byte)-max);
 		}
 	}
@@ -262,11 +241,13 @@ public class Node {
 		if(max == 1) offset = 6; // si on est sur un min c'est l'adversaire qui joue donc ses trous sont à +6 si on a une boucle qui va de 0 à 5
 		for(byte i = 0; i < 6; i++) {
 			if(this.isPlayable((byte)(i+ offset))) {
-				byte eval = this.play((byte)(i+offset), (byte)-max).MinMax((byte)(depth - 1), (byte)-max);
+				Node n = this.play((byte)(i+offset), (byte)-max);
+				byte eval = n.MinMax((byte)(depth - 1), (byte)-max);
+				n.setNodeScore(eval);
 				byte storeScore = score;
 				score = (byte)( max * Math.min(max * eval, max * score) );
 				if((storeScore < score && max == 1) || (storeScore > score && max == -1)) {
-					indexPlayedHole = i;
+					this.indexPlayedHole = i;
 				}
 			}
 		}

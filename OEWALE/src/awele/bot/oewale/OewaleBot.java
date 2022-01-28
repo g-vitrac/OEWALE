@@ -46,7 +46,8 @@ public class OewaleBot extends CompetitorBot{
 	@Override
 	public void learn() {
 		root = new Node(0b0000001000010000100001000010000100001000010000100001000010000100L);
-		root.developMinMax(50, (byte)-1);
+		root.setNodeScore((byte)0);
+		root.developMinMax(10, (byte)-1);
 	}
 	
 	private long convertBoard(Board board) {

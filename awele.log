@@ -1,4 +1,4 @@
-Mémoire totale : 2,0 GiB
+Mémoire totale : 4,0 GiB
 Instanciation du bot "Random"
 7 classes ont été trouvées
 class awele.bot.random.RandomBot
@@ -17,7 +17,7 @@ Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
 Usage mémoire : 0 B
-Usage mémoire maximum : 390,0 KiB
+Usage mémoire maximum : 523,6 KiB
 
 Bot 2/7
 Classe : awele.bot.first.FirstBot
@@ -27,7 +27,7 @@ Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
 Usage mémoire : 592 B
-Usage mémoire maximum : 411,6 KiB
+Usage mémoire maximum : 404,2 KiB
 
 Bot 3/7
 Classe : awele.bot.last.LastBot
@@ -36,8 +36,8 @@ Nom du bot : Last
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 896 B
-Usage mémoire maximum : 420,8 KiB
+Usage mémoire : 656 B
+Usage mémoire maximum : 395,5 KiB
 
 Bot 4/7
 Classe : awele.bot.minmax.MinMaxBot
@@ -45,9 +45,9 @@ Instanciation du bot "MinMax"
 Nom du bot : MinMax
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.051
-Usage mémoire : 1,5 KiB
-Usage mémoire maximum : 122,0 MiB
+Durée d'une prise de décision : 00:00:00.056
+Usage mémoire : 1,8 KiB
+Usage mémoire maximum : 55,0 MiB
 
 Bot 5/7
 Classe : awele.bot.knn2.Knn2Bot
@@ -56,11 +56,48 @@ Nom du bot : k-NN2
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.006
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 25,9 KiB
-Usage mémoire maximum : 1,4 MiB
+Usage mémoire : 26,6 KiB
+Usage mémoire maximum : 1,7 MiB
 
 Bot 6/7
 Classe : awele.bot.oewale.OewaleBot
 Instanciation du bot "Oewale"
 Nom du bot : Oewale
 Auteur(s) : Wati team
+Bot "awele.bot.oewale.OewaleBot" disqualifié : ne peut pas être instancié
+java.util.ConcurrentModificationException
+
+Bot 7/7
+Classe : awele.bot.knn1.Knn1Bot
+Instanciation du bot "k-NN1"
+Nom du bot : k-NN1
+Auteur(s) : Alexandre Blansché
+Temps d'apprentissage : 00:00:00.001
+Durée d'une prise de décision : 00:00:00.000
+Usage mémoire : 12,1 KiB
+Usage mémoire maximum : 955,3 KiB
+
+6 bots ont été instanciés
+Durée du chargement : 00:00:02.659
+Mémoire utilisée : 3,6 MiB
+
+Que le championnat commence !
+
+Affrontement 1/15
+Random vs. First
+Score : 1.68 - 1.29
+Random a gagné
+Nombre de coups joués : 157.89 par match
+Durée : 00:00:00.000 par match
+Mémoire utilisée : 3,6 MiB
+
+Affrontement 2/15
+Random vs. Last
+Score : 0.1 - 2.89
+Last a gagné
+Nombre de coups joués : 109.08 par match
+Durée : 00:00:00.000 par match
+Mémoire utilisée : 3,6 MiB
+
+Affrontement 3/15
+Random vs. MinMax
