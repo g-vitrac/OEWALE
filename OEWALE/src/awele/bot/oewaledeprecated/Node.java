@@ -1,4 +1,4 @@
-package awele.bot.oewale;
+package awele.bot.oewaledeprecated;
 
 import java.util.ArrayList;
 import java.util.Comparator;

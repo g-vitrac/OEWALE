@@ -1,7 +1,4 @@
-/**
- * 
- */
-package awele.bot.oewale;
+package awele.bot.oewaledeprecated;
 
 import awele.bot.CompetitorBot;
 import awele.core.Board;
@@ -10,10 +7,10 @@ import utils.LongMethod;
 
 public class OewaleBot extends CompetitorBot{
 	
-	private static final int inf = 1000000000;
-	
 	private static final int MAX_DECISION_TIME = 100; // 100ms
 	 private static final int MAX_LEARNING_TIME = 1000 * 60 * 60 * 1; // 1 h
+	
+	private Node root;
 	
 	public OewaleBot() throws InvalidBotException {
 		this.setBotName ("Oewale");
@@ -35,60 +32,22 @@ public class OewaleBot extends CompetitorBot{
 	public double[] getDecision(Board board) {
 		long start = System.currentTimeMillis();
 		long lboard = convertBoard(board); //board to long conversion 
-		double[] nextBoard = new double[6];long end = System.currentTimeMillis();
+		Node actualState = root.search(lboard); //search long in the minmax tree
+		Node bestMove = actualState.getChildren(0); // because our best move is always the first
+		double[] nextBoard = new double[6];
+		nextBoard[bestMove.getIndexPlayedHole()] = 1;
+		root = bestMove.pruning(); // removing all useless nodes in the tree where best move is now the root and update root field
+		long end = System.currentTimeMillis();
 		long remainingTime = MAX_DECISION_TIME - end - start - 5;
-		
+		bestMove.developMinMax(remainingTime, (byte)1);	
 		return nextBoard;
 	}
 
 	@Override
 	public void learn() {
-		
-	}
-	
-	public boolean isPlayable(long board, byte i) {
-		
-		if(LongMethod.getIVal((byte)(i+1), board) == 0) {
-			return false;
-		}
-		boolean playable = true;
-		if(this.getOpponentNbSeeds(board) == 0 && this.getNbSeedInAnyHole(board, (byte)(i+1)) + i <= 6) // if our opponent is starving and we can give him seed 
-			playable = false;
-		return playable;
-	}
-	
-	public byte getOpponentNbSeeds(long board) {
-		byte sum = 0;
-		for(byte i = 7; i <= 12; i++) {
-			sum += LongMethod.getIVal((byte)i, board);
-		}
-		return sum;
-	}
-	
-	public byte getNbSeedInAnyHole(long board, byte i) {
-		return LongMethod.getIVal((byte)i, board);
-	}
-	
-	
-	
-	public int alphabeta(long board, boolean max, int alpha, int beta) {
-		int bestVal;
-		if(max)
-			bestVal = -inf;
-		else
-			bestVal = inf;
-		
-		for(byte i = 0; i < 6; i ++) {
-			if(isPlayable(board, i)) {
-				if(max) {
-					
-				}else {
-					
-				}
-			}
-		}
-		
-		return 0;
+		root = new Node(0b0000001000010000100001000010000100001000010000100001000010000100L);
+		root.setNodeScore((byte)0);
+		root.developMinMax(10, (byte)-1);
 	}
 	
 	private long convertBoard(Board board) {

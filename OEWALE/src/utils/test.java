@@ -3,7 +3,7 @@
  */
 package utils;
 
-import awele.bot.oewale.Node;
+import awele.bot.oewaledeprecated.Node;
 import awele.core.Board;
 
 /**

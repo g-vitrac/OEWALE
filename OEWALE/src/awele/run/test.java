@@ -5,7 +5,7 @@ package awele.run;
 
 import java.util.Comparator;
 
-import awele.bot.oewale.Node;
+import awele.bot.oewaledeprecated.Node;
 import utils.LongMethod;
 
 /**
