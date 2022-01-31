@@ -13,8 +13,7 @@ public class OewaleBot extends CompetitorBot{
 	private Node root;
 	
 	public OewaleBot() throws InvalidBotException {
-		this.setBotName ("Oewale");
-        this.addAuthor ("Wati team");
+		
 	}
 	
 
