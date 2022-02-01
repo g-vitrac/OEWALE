@@ -212,6 +212,7 @@ public class Board
     {
         int score = 0;
         int bestMove = this.selectMove (player, decision);
+        System.out.println("Coup joué = " + (bestMove+1));
         if (bestMove >= 0)
         {
             this.addLog (player, bestMove);

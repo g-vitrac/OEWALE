@@ -18,8 +18,8 @@ public class MinMaxBot extends DemoBot
      */
     public MinMaxBot () throws InvalidBotException
     {
-        this.setBotName ("MinMax");
-        this.addAuthor ("Alexandre Blansché");
+        //this.setBotName ("MinMax");
+        //this.addAuthor ("Alexandre Blansché");
     }
 
     /**

@@ -19,8 +19,8 @@ public class Knn2Bot extends DemoBot
      */
     public Knn2Bot () throws InvalidBotException
     {
-        this.setBotName ("k-NN2");
-        this.addAuthor ("Alexandre Blansché");
+        //this.setBotName ("k-NN2");
+        //this.addAuthor ("Alexandre Blansché");
     }
 
     /**

@@ -6,7 +6,6 @@ package awele.bot.oewale;
 import java.util.Random;
 
 import awele.bot.CompetitorBot;
-import awele.bot.oewaledeprecated.Node;
 import awele.core.Awele;
 import awele.core.Board;
 import awele.core.InvalidBotException;
@@ -18,8 +17,12 @@ public class OewaleBot extends CompetitorBot{
 	private static final int MAX_LEARNING_TIME = 1000 * 60 * 60 * 1; // 1 h
 	private static final int MAX_PHASE1_LEARNING_TIME = 100 * 49 * 60 * 1; // 49 minutes
 	private static final int MAX_PHASE2_LEARNING_TIME = 100 * 9 * 60 * 1; // 9 minutes
+	
+	private static final int MAX_PHASE1_LEARNING_TIME_FOR_TEST = 30000; // 1 minutes
+	private static final int MAX_PHASE2_LEARNING_TIME_FOR_TEST = 10000; // 30 secondes
 		
-	private static final int inf = 1000000000;
+	private static final double POSITIVE_INF = 100000;
+	private static final double NEGATIVE_INF = -100000;
 	
 	private double maxLearningScore;
 	private double scoreGame;
@@ -28,7 +31,16 @@ public class OewaleBot extends CompetitorBot{
 	private double coefC;
 	private double coefD;
 	
-	private OewaleBot botForTraining;
+	// CONSTRUCTOR
+	
+	public OewaleBot() throws InvalidBotException {
+		this.setBotName ("Oewale");
+        this.addAuthor ("Wati team");
+        this.coefA = 1;
+        this.coefB = 1;
+        this.coefC = 1;
+        this.coefD = 1;
+	}
 	
 	// GETTERS and SETTERS
 	
@@ -106,20 +118,11 @@ public class OewaleBot extends CompetitorBot{
 		this.coefC = coefs[2];
 		this.coefD = coefs[3];
 	}
-
-	// CONSTRUCTOR
-	
-	public OewaleBot() throws InvalidBotException {
-		this.setBotName ("Oewale");
-        this.addAuthor ("Wati team");
-	}
 	
 	// BOT METHODS
 	
 	@Override
 	public void initialize() {
-		this.setScoreGame(0);
-		this.botForTraining.setScoreGame(0);
 	}
 
 	@Override
@@ -127,36 +130,100 @@ public class OewaleBot extends CompetitorBot{
 		
 	}
 
+	public void printBoard(long d) {
+		System.out.println(LongMethod.getIVal((byte)12, d) + " " + LongMethod.getIVal((byte)11, d) + " " + LongMethod.getIVal((byte)10, d) + " " + LongMethod.getIVal((byte)9, d)+ " " + LongMethod.getIVal((byte)8, d)+ " " + LongMethod.getIVal((byte)7, d));
+		System.out.println(LongMethod.getIVal((byte)1, d) + " " + LongMethod.getIVal((byte)2, d) + " " + LongMethod.getIVal((byte)3, d) + " " + LongMethod.getIVal((byte)4, d)+ " " + LongMethod.getIVal((byte)5, d)+ " " + LongMethod.getIVal((byte)6, d));
+		System.out.println();
+	}
+	
 	@Override
 	public double[] getDecision(Board board) {
-		long start = System.currentTimeMillis();
-		long lboard = convertBoard(board); //board to long conversion 
-		double[] nextBoard = new double[6];long end = System.currentTimeMillis();
-		long remainingTime = MAX_DECISION_TIME - end - start - 5;
-		
-		return nextBoard;
+		System.out.println("-----------------------------------------------------");
+		System.out.println("On recoit le board :");
+		printBoard(this.convertBoard(board));
+		System.out.println("Notre score : " + board.getScore(0) + " Adversaire score : " + board.getScore(1));
+		System.out.println();
+		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(0)); 
+		double[] nextBoard = new double[6];  
+		for(int i =0; i < 6; i++) { 
+			if(Cboard.isPlayable(i)) { 
+				CustomBoard copyBoard = Cboard.clone();
+				copyBoard.play((byte)i, (byte)-1);
+				if(copyBoard.isFinish()) {
+					if(copyBoard.isWin()) {
+						nextBoard[i] = POSITIVE_INF;
+					}
+					nextBoard[i] = NEGATIVE_INF;
+				}
+				nextBoard[i] = negamax(copyBoard, 3, NEGATIVE_INF, POSITIVE_INF, 1);
+			}
+		}
+		System.out.println("Evaluation des coups :");
+		System.out.println(nextBoard[0] + " " + nextBoard[1] + " " + nextBoard[2] + " " + nextBoard[3] + " " + nextBoard[4] + " " + nextBoard[5]);
+		return nextBoard; 
 	}
 
 	@Override
 	public void learn() {
-		double remainingTime = 0;
-		double start = System.currentTimeMillis();
-		while(remainingTime < MAX_PHASE1_LEARNING_TIME) {
-			findBestCoef((byte)0.5);
-			remainingTime += start - System.currentTimeMillis();
+		/*
+		try {
+			OewaleBot trainingBot = new OewaleBot();
+			double[] coefBotB = {1,1,1,1};
+			trainingBot.setCoefs(coefBotB);
+			double remainingTime = 0;
+			double start = System.currentTimeMillis();
+			while(remainingTime < MAX_PHASE1_LEARNING_TIME_FOR_TEST) {
+				findBestCoef((byte)0.5, trainingBot);
+				remainingTime += System.currentTimeMillis() - start;
+			}
+			while(remainingTime < MAX_PHASE2_LEARNING_TIME_FOR_TEST) {
+				findBestCoef((byte)0.1, trainingBot);
+				remainingTime += System.currentTimeMillis() - start;
+			}
+		} catch (InvalidBotException e) {
+			e.printStackTrace();
 		}
-		while(remainingTime < MAX_PHASE2_LEARNING_TIME) {
-			findBestCoef((byte)0.1);
-			remainingTime += start - System.currentTimeMillis();
-		}
+		*/
 	}
 	
 	// UTILS METHODS
 	
-	public void findBestCoef(byte variationMax) {
+	public double negamax(CustomBoard board, int depth, double alpha, double beta, int player) {
+		if(depth == 0 || board.isFinish()) {
+			if(board.isFinish()) {
+				if(board.isWin()) {
+					return player * 50;
+				}
+				return player * -50;
+			}
+			//System.out.println("board.getScore() : " + board.getScore());
+			return player * (board.getScore() - board.getOpponentScore());
+		}
+		//TODO generation de tous les coups possibles
+		//TODO tri des coups
+		double value = NEGATIVE_INF;
+		int offset = 0;
+		if(player == 1)
+			offset = 6;
+		for(int i = 0 ; i < 6; i++) {
+			if(board.isPlayable(i+offset)) {
+				CustomBoard copyBoard = board.clone();
+				copyBoard.play((byte)(i+offset), (byte)-1);
+				value = Math.max(value,  -negamax(copyBoard, depth - 1, -beta, -alpha, -player));
+				alpha = Math.max(alpha, value);
+				if(alpha >= beta) {
+					break;
+				}
+			}
+		}
+		return value;
+	}
+		
+	
+	public void findBestCoef(byte variationMax, OewaleBot trainingBot) {
 		this.setScoreGame(0); 
-		botForTraining.setScoreGame(0);
-		Awele awele = new Awele (this, botForTraining);
+		trainingBot.setScoreGame(0);
+		Awele awele = new Awele (this, trainingBot);
 	    try {
 			awele.play();
 		} catch (InvalidBotException e) {
@@ -165,7 +232,7 @@ public class OewaleBot extends CompetitorBot{
 	    double scoreA = this.getScoreGame();
 	    if(scoreA > this.getMaxLearningScore()){
 	    	this.setMaxLearningScore(scoreA);
-	    	botForTraining.setCoefs(this.getCoefs());
+	    	trainingBot.setCoefs(this.getCoefs());
 		}
 		this.coefVariation(variationMax);
 	}
@@ -181,100 +248,6 @@ public class OewaleBot extends CompetitorBot{
 		double minLimit = coef - variationMax;
 	    double maxLimit = coef + variationMax;
 	    return minLimit + new Random().nextDouble() * (maxLimit - minLimit);
-	}
-	
-	public void play(long board, byte i, byte max) {
-		byte holeIndex =  (byte) (i + 1);
-		long newData = board;
-		byte nbSeedInHole = this.getNbSeedInAnyHole(board, holeIndex);
-		byte indexLastHole = (byte)(((holeIndex + nbSeedInHole) % 12));
-		byte cpt = (byte) (holeIndex + 1);
-		if(cpt > 12) cpt = 1;
-		for(byte j = nbSeedInHole; j > 0; j--) {
-			newData = LongMethod.setIVal(cpt, (byte)(LongMethod.getIVal(cpt, newData)+1), newData);
-			cpt++;
-			if(cpt > 12) cpt = 1;
-			if(cpt == holeIndex) cpt++;
-		}
-		newData = LongMethod.setIVal(holeIndex, (byte)0, newData);
-		if(max == -1 && indexLastHole > 6) {
-
-			for(byte j = indexLastHole; j >= 7; j--) {
-				byte nb = LongMethod.getIVal(j, newData);
-				if( nb == 2 || nb == 3) {
-					this.scoreGame += nb;
-					newData = LongMethod.setIVal(j, (byte)0, newData);
-
-				}
-				else {
-					break;
-				}
-			}
-		}else if(max == 1 && indexLastHole < 6) {
-			for(byte j = indexLastHole; j >= 0; j--) {
-				byte nb = LongMethod.getIVal(j, newData);
-				if( nb == 2 || nb == 3) {
-					newData = LongMethod.setIVal(j, (byte)0, newData);
-				}
-				else {
-					break;
-				}
-			}
-		}
-	}
-	
-	public boolean isPlayable(long board, byte i) {
-		if(LongMethod.getIVal((byte)(i+1), board) == 0) {
-			return false;
-		}
-		boolean playable = true;
-		if(this.getOpponentNbSeeds(board) == 0 && this.getNbSeedInAnyHole(board, (byte)(i+1)) + i <= 6) // if our opponent is starving and we can give him seed 
-			playable = false;
-		return playable;
-	}
-	
-	public byte getOurNbSeeds(long board) {
-		byte sum = 0;
-		for(byte i = 1; i <= 6; i++) {
-			sum += LongMethod.getIVal((byte)i, board);
-		}
-		return sum;
-	}
-	
-	public byte getOpponentNbSeeds(long board) {
-		byte sum = 0;
-		for(byte i = 7; i <= 12; i++) {
-			sum += LongMethod.getIVal((byte)i, board);
-		}
-		return sum;
-	}
-	
-	public byte getNbSeedInAnyHole(long board, byte i) {
-		return LongMethod.getIVal((byte)i, board);
-	}
-	
-	public byte getOpponentScore(long board) {
-		return (byte) (48 - this.getScoreGame() - this.getOurNbSeeds(board) - this.getOpponentNbSeeds(board));  
-	}
-	
-	public int alphabeta(long board, boolean max, int alpha, int beta) {
-		int bestVal;
-		if(max)
-			bestVal = -inf;
-		else
-			bestVal = inf;
-		
-		for(byte i = 0; i < 6; i ++) {
-			if(isPlayable(board, i)) {
-				if(max) {
-					// TU TEST DEUX FOIS IF(MAX) C PAS OPTI MEME SI Y A REDONDANCE DE CODE OSEF MAIS FAIT PEUT ETRE UN IF(MAX) ELSE ET TU DUPLIQUES OSEF
-				}else {
-					
-				}
-			}
-		}
-		
-		return 0;
 	}
 	
 	private long convertBoard(Board board) {
