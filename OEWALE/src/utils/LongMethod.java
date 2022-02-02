@@ -23,10 +23,8 @@ public abstract class LongMethod {
 		result = (byte)(result & 31);
 		
 		// Overflow detected
-		if((l >>> NB_BIT_FAIBLE) > 0){
-			// add the strong weighed bit
+		if((l >>> NB_BIT_FAIBLE) > 0 && (l >>> NB_BIT_FAIBLE) == i)		
 			result = (byte)(result | (1 << 5));
-		}
 		
 		return result; 
 	}
