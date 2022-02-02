@@ -18,7 +18,7 @@ Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
 Usage mémoire : 0 B
-Usage mémoire maximum : 422,1 KiB
+Usage mémoire maximum : 374,0 KiB
 
 Bot 2/8
 Classe : awele.bot.first.FirstBot
@@ -33,8 +33,8 @@ Nom du bot : Last
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
 Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 608 B
-Usage mémoire maximum : 398,0 KiB
+Usage mémoire : 656 B
+Usage mémoire maximum : 420,9 KiB
 
 Bot 4/8
 Classe : awele.bot.oewaledeprecated.OewaleBot
@@ -60,9 +60,9 @@ Instanciation du bot "Oewale"
 Nom du bot : Oewale
 Auteur(s) : Wati team
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 2,5 KiB
-Usage mémoire maximum : 638,9 KiB
+Durée d'une prise de décision : 00:00:00.105
+Usage mémoire : 3,4 KiB
+Usage mémoire maximum : 734,7 KiB
 
 Bot 8/8
 Classe : awele.bot.knn1.Knn1Bot
@@ -71,43 +71,18 @@ Bot "awele.bot.knn1.Knn1Bot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 3 bots ont été instanciés
-Durée du chargement : 00:00:00.462
-Mémoire utilisée : 3,5 MiB
+Durée du chargement : 00:00:06.474
+Mémoire utilisée : 3,6 MiB
 
 Que le championnat commence !
 
 Affrontement 1/3
 Random vs. Last
-Score : 0.09 - 2.91
+Score : 0.04 - 2.95
 Last a gagné
-Nombre de coups joués : 108.765 par match
+Nombre de coups joués : 106.795 par match
 Durée : 00:00:00.000 par match
 Mémoire utilisée : 3,6 MiB
 
 Affrontement 2/3
 Random vs. Oewale
-Score : 0.15 - 2.85
-Oewale a gagné
-Nombre de coups joués : 47.06 par match
-Durée : 00:00:00.001 par match
-Mémoire utilisée : 3,6 MiB
-
-Affrontement 3/3
-Last vs. Oewale
-Score : 2.05 - 0.94
-Last a gagné
-Nombre de coups joués : 90.42 par match
-Durée : 00:00:00.002 par match
-Mémoire utilisée : 3,6 MiB
-
-Durée du championnat : 00:00:01.072
-
-Scores finaux :
-Random : 0.24
-Last : 4.96
-Oewale : 3.79
-
-Rangs :
-1. Last : 4.96
-2. Oewale : 3.79
-3. Random : 0.24

@@ -91,6 +91,7 @@ public class Awele extends OutputWriter
         this.players [0].initialize ();
         this.players [1].initialize ();
         int [] game1Score = this.game (0);
+        //System.out.println("Nous : " + game1Score[0] + " Lui : " + game1Score[1]);
         this.players [0].finish ();
         this.players [1].finish ();
         this.runningTime += System.currentTimeMillis () - start;
@@ -100,6 +101,7 @@ public class Awele extends OutputWriter
         this.players [0].initialize ();
         this.players [1].initialize ();
         int [] game2Score = this.game (1);
+        //System.out.println("Nous : " + game2Score[0] + " Lui : " + game2Score[1]);
         this.players [0].finish ();
         this.players [1].finish ();
         this.runningTime += System.currentTimeMillis () - start;

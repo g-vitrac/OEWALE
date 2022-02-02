@@ -40,7 +40,7 @@ public class RandomBot extends DemoBot
         double [] decision = new double [Board.NB_HOLES];
         for (int i = 0; i < decision.length; i++)
             decision [i] = this.random.nextDouble ();
-        System.out.println("coups random:");
+        //System.out.println("coups random:");
         return decision;
     }
     

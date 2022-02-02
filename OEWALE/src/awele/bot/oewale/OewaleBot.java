@@ -138,11 +138,11 @@ public class OewaleBot extends CompetitorBot{
 	
 	@Override
 	public double[] getDecision(Board board) {
-		System.out.println("-----------------------------------------------------");
-		System.out.println("On recoit le board :");
-		printBoard(this.convertBoard(board));
-		System.out.println("Notre score : " + board.getScore(0) + " Adversaire score : " + board.getScore(1));
-		System.out.println();
+		//System.out.println("-----------------------------------------------------");
+		//System.out.println("On recoit le board :");
+		//printBoard(this.convertBoard(board));
+		//System.out.println("Notre score : " + board.getScore(0) + " Adversaire score : " + board.getScore(1));
+		//System.out.println();
 		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(0)); 
 		double[] nextBoard = new double[6];  
 		for(int i =0; i < 6; i++) { 
@@ -155,11 +155,11 @@ public class OewaleBot extends CompetitorBot{
 					}
 					nextBoard[i] = NEGATIVE_INF;
 				}
-				nextBoard[i] = negamax(copyBoard, 3, NEGATIVE_INF, POSITIVE_INF, 1);
+				nextBoard[i] = negamax(copyBoard, 8, NEGATIVE_INF, POSITIVE_INF, 1);
 			}
 		}
-		System.out.println("Evaluation des coups :");
-		System.out.println(nextBoard[0] + " " + nextBoard[1] + " " + nextBoard[2] + " " + nextBoard[3] + " " + nextBoard[4] + " " + nextBoard[5]);
+		//System.out.println("Evaluation des coups :");
+		//System.out.println(nextBoard[0] + " " + nextBoard[1] + " " + nextBoard[2] + " " + nextBoard[3] + " " + nextBoard[4] + " " + nextBoard[5]);
 		return nextBoard; 
 	}
 
@@ -190,13 +190,14 @@ public class OewaleBot extends CompetitorBot{
 	
 	public double negamax(CustomBoard board, int depth, double alpha, double beta, int player) {
 		if(depth == 0 || board.isFinish()) {
-			if(board.isFinish()) {
+			/*if(board.isFinish()) {
 				if(board.isWin()) {
 					return player * 50;
 				}
 				return player * -50;
-			}
-			//System.out.println("board.getScore() : " + board.getScore());
+			}*/
+			this.printBoard(board.getBoardData());
+			System.out.println("board.getScore() : " + board.getScore()  + "  board.getOpponentScore() : " + board.getOpponentScore() + " etat : " + -player );
 			return player * (board.getScore() - board.getOpponentScore());
 		}
 		//TODO generation de tous les coups possibles

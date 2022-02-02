@@ -227,7 +227,7 @@ public final class Main extends OutputWriter
                     catch (InvalidBotException e)
                     {
                         e.printStackTrace();
-                    }
+                    } 
                     nbMoves += awele.getNbMoves ();
                     runningTime += awele.getRunningTime ();
                     if (awele.getWinner () >= 0)

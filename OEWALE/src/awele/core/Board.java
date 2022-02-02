@@ -16,9 +16,9 @@ public class Board
      */
     public static final int NB_HOLES = 6;
     private static final int NB_SEEDS = 4;
-    int [][] holes;
+    public int [][] holes;
     private int [] score;
-    int currentPlayer;
+    public int currentPlayer;
     private List<List<Integer>> log;
     private Random random;
     
@@ -212,7 +212,7 @@ public class Board
     {
         int score = 0;
         int bestMove = this.selectMove (player, decision);
-        System.out.println("Coup joué = " + (bestMove+1));
+        //System.out.println("Coup joué = " + (bestMove+1));
         if (bestMove >= 0)
         {
             this.addLog (player, bestMove);
