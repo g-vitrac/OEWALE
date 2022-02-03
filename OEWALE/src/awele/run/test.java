@@ -40,10 +40,71 @@ public class test {
 		System.out.println();
 	}
 	
+	private static final double POSITIVE_INF = 100000;
+	private static final double NEGATIVE_INF = -100000;
+	
+	public static double negamax(CustomBoard board, int depth, double alpha, double beta, int player) {
+		if(depth == 0 || board.isFinish(player)) {
+			/*if(board.isFinish(player)) {
+				if(board.isWin()) {
+					return player * 50;
+				}else if(board.isLose())
+					return player * -50;
+				else
+					return 0;
+			}*/
+			//this.printBoard(board.getBoardData());
+			//System.out.println("board.getScore() : " + board.getScore()  + "  board.getOpponentScore() : " + board.getOpponentScore() + " player : " + player);
+			//System.out.println();
+			return player * (board.getScore() - board.getOpponentScore());
+		}
+		//TODO generation de tous les coups possibles
+		//TODO tri des coups
+		double value = NEGATIVE_INF;
+		int offset = 0;
+		if(player == 1)
+			offset = 6;
+		for(int i = 1 ; i <= 6; i++) {
+			if(board.isPlayable(i+offset, player)) {
+				CustomBoard copyBoard = board.clone();
+				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, player);
+				copyBoard.play(i+offset, player, canTakeSeeds);
+				value = Math.max(value,  -negamax(copyBoard, depth - 1, -beta, -alpha, -player));
+				alpha = Math.max(alpha, value);
+				if(alpha >= beta) {
+					break;
+				}
+			}
+		}
+		return value;
+	}
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		CustomBoard Cboard = new CustomBoard(0b0000001000010000100001000010000100001000010000100001000010000100L, 0); 
+		double[] decision = new double[6];  
+		for(int i = 1; i <= 6; i++) { 
+			if(Cboard.isPlayable(i, 1)) { 
+				CustomBoard copyBoard = Cboard.clone();
+				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, 1);
+				copyBoard.play(i, 1, canTakeSeeds);
+				if(copyBoard.isFinish(1)) {
+					if(copyBoard.isWin()) {
+						decision[i-1] = POSITIVE_INF;
+					}else if(copyBoard.isLose()) {
+						decision[i-1] = NEGATIVE_INF;
+					}else {
+						decision[i-1] = 0;
+					}
+				}else {
+					decision[i-1] = negamax(copyBoard, 6, NEGATIVE_INF, POSITIVE_INF, 1);
+				}
+			}
+		}
+		
 		/*
 		Node root = new Node(0b0000000110001100011000110001100011000110001100011011110001100011L);
 		System.out.println(LongMethod.toBinaryString(root.getData()));
@@ -51,7 +112,7 @@ public class test {
 		System.out.println(LongMethod.toBinaryString(root.getData()));
 		*/
 		
-		Board board = new Board();
+		/*Board board = new Board();
 		board.currentPlayer = 0;
 		board.holes[0][0] = 1;
 		board.holes[0][1] = 1;
@@ -71,7 +132,7 @@ public class test {
 		boolean canTakeSeeds = Cboard.isOpponentStarvingAfterPlaying(12, 1);
 		System.out.println("CanTake : " + canTakeSeeds);
 		Cboard.play(12, 1, canTakeSeeds);
-		printBoard(Cboard.getBoardData());
+		printBoard(Cboard.getBoardData());*/
 		
 		
 		

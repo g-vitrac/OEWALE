@@ -15,8 +15,8 @@ public class LastBot extends DemoBot
      */
     public LastBot () throws InvalidBotException
     {
-        this.setBotName ("Last");
-        this.addAuthor ("Alexandre Blansché");
+        //this.setBotName ("Last");
+        //this.addAuthor ("Alexandre Blansché");
     }
 
     /**

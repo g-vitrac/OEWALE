@@ -12,6 +12,8 @@ public abstract class MinMaxNode
     /** Numéro de joueur de l'IA */
     private static int player;
 
+    //private 
+    
     /** Profondeur maximale */
     private static int maxDepth;
 
@@ -28,6 +30,7 @@ public abstract class MinMaxNode
      * @param alpha Le seuil pour la coupe alpha
      * @param beta Le seuil pour la coupe beta
      */
+    
     public MinMaxNode (Board board, int depth, double alpha, double beta)
     {
         /* On crée un tableau des évaluations des coups à jouer pour chaque situation possible */
@@ -48,6 +51,7 @@ public abstract class MinMaxNode
                 {
                     int score = copy.playMoveSimulationScore (copy.getCurrentPlayer (), decision);
                     copy = copy.playMoveSimulationBoard (copy.getCurrentPlayer (), decision);
+              
                     /* Si la nouvelle situation de jeu est un coup qui met fin à la partie,
                        on évalue la situation actuelle */   
                     if ((score < 0) ||
@@ -83,6 +87,7 @@ public abstract class MinMaxNode
                     this.decision [i] = 0;
                 }
             }
+        
     }
 
     /** Pire score pour un joueur */

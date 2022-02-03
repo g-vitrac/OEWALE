@@ -32,7 +32,7 @@ public class Awele extends OutputWriter
     
     private int [] game (int firstPlayer) throws InvalidBotException
     {
-    	System.out.println("NEW GAME +++++++++++++++++++++++++++++++++++++++++");
+    	//System.out.println("NEW GAME +++++++++++++++++++++++++++++++++++++++++");
         boolean end = false;
         Board board = new Board ();
         board.setCurrentPlayer (firstPlayer);
@@ -67,12 +67,12 @@ public class Awele extends OutputWriter
         int [] score = new int [2];
         score [0] = board.getScore (0);
         score [1] = board.getScore (1);
-        if(score[0] > score[1])
-        	System.out.println("----------------------Winner : 0");
-        if(score[1] > score[0])
-        	System.out.println("----------------------Winner : 1");
-        if(score[0] == score[1])
-        	System.out.println("---------------------EGALITE");
+        //if(score[0] > score[1])
+        	//System.out.println("----------------------Winner : 0");
+        //if(score[1] > score[0])
+        	//System.out.println("----------------------Winner : 1");
+        //if(score[0] == score[1])
+        	//System.out.println("---------------------EGALITE");
         return score;
         
     }

@@ -23,13 +23,9 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 Bot 3/8
 Classe : awele.bot.last.LastBot
-Instanciation du bot "Last"
-Nom du bot : Last
-Auteur(s) : Alexandre Blansché
-Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.000
-Usage mémoire : 1,4 KiB
-Usage mémoire maximum : 390,0 KiB
+Nom du bot : 
+Bot "awele.bot.last.LastBot" disqualifié : ne peut pas être instancié
+java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 Bot 4/8
 Classe : awele.bot.oewaledeprecated.OewaleBot
@@ -39,9 +35,13 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 Bot 5/8
 Classe : awele.bot.minmax.MinMaxBot
-Nom du bot : 
-Bot "awele.bot.minmax.MinMaxBot" disqualifié : ne peut pas être instancié
-java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+Instanciation du bot "MinMax"
+Nom du bot : MinMax
+Auteur(s) : Alexandre Blansché
+Temps d'apprentissage : 00:00:00.000
+Durée d'une prise de décision : 00:00:00.002
+Usage mémoire : 2,9 KiB
+Usage mémoire maximum : 23,0 MiB
 
 Bot 6/8
 Classe : awele.bot.knn2.Knn2Bot
@@ -55,9 +55,9 @@ Instanciation du bot "Oewale"
 Nom du bot : Oewale
 Auteur(s) : Wati team
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.002
-Usage mémoire : 2,2 KiB
-Usage mémoire maximum : 989,2 KiB
+Durée d'une prise de décision : 00:00:00.001
+Usage mémoire : 1,4 KiB
+Usage mémoire maximum : 2,1 MiB
 
 Bot 8/8
 Classe : awele.bot.knn1.Knn1Bot
@@ -66,10 +66,25 @@ Bot "awele.bot.knn1.Knn1Bot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 2 bots ont été instanciés
-Durée du chargement : 00:00:00.329
+Durée du chargement : 00:00:00.646
 Mémoire utilisée : 3,6 MiB
 
 Que le championnat commence !
 
 Affrontement 1/1
-Last vs. Oewale
+MinMax vs. Oewale
+Score : 3.0 - 0.0
+MinMax a gagné
+Nombre de coups joués : 42.095 par match
+Durée : 00:00:00.031 par match
+Mémoire utilisée : 3,7 MiB
+
+Durée du championnat : 00:00:06.298
+
+Scores finaux :
+MinMax : 3.0
+Oewale : 0.0
+
+Rangs :
+1. MinMax : 3.0
+2. Oewale : 0.0

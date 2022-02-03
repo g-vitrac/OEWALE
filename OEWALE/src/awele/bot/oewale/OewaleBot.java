@@ -140,17 +140,20 @@ public class OewaleBot extends CompetitorBot{
 	
 	@Override
 	public double[] getDecision(Board board) {
-		
+		nbCoup = 0;
 		System.out.println("-------------"+board.getCurrentPlayer()+"---------------------------------------");
 		System.out.println("On recoit le board :");
+		System.out.println(LongMethod.toBinaryString(convertBoard(board)));
 		printBoard(this.convertBoard(board));
 		//if(end) System.exit(0);
 		System.out.println("Notre score : " + board.getScore(board.getCurrentPlayer()) + " Adversaire score : " + board.getScore(1-board.getCurrentPlayer()));
 		System.out.println();
 		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(board.getCurrentPlayer())); 
-		double[] decision = new double[6];  
+		double[] decision = new double[6];
+		for(int i = 0; i < 6; i++) decision[i] = NEGATIVE_INF -1;
 		for(int i = 1; i <= 6; i++) { 
 			if(Cboard.isPlayable(i, 1)) { 
+				nbCoup++;
 				CustomBoard copyBoard = Cboard.clone();
 				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, 1);
 				copyBoard.play(i, 1, canTakeSeeds);
@@ -170,7 +173,9 @@ public class OewaleBot extends CompetitorBot{
 		}
 		System.out.println("Evaluation des coups :");
 		System.out.println(decision[0] + " " + decision[1] + " " + decision[2] + " " + decision[3] + " " + decision[4] + " " + decision[5]);
-		return decision; 
+		//System.out.println("NbCoup exploré : " + nbCoup);
+		
+		return decision;
 	}
 
 	@Override
@@ -194,20 +199,24 @@ public class OewaleBot extends CompetitorBot{
 			e.printStackTrace();
 		}
 		*/
-	}
+	}	
 	
 	// UTILS METHODS
-
+	
+	public int nbCoup = 0;
+	
 	public double negamax(CustomBoard board, int depth, double alpha, double beta, int player) {
+		nbCoup ++;
 		if(depth == 0 || board.isFinish(player)) {
-			if(board.isFinish(player)) {
+			nbCoup ++;
+			/*if(board.isFinish(player)) {
 				if(board.isWin()) {
 					return player * 50;
 				}else if(board.isLose())
 					return player * -50;
 				else
 					return 0;
-			}
+			}*/
 			//this.printBoard(board.getBoardData());
 			//System.out.println("board.getScore() : " + board.getScore()  + "  board.getOpponentScore() : " + board.getOpponentScore() + " player : " + player);
 			//System.out.println();
@@ -217,7 +226,7 @@ public class OewaleBot extends CompetitorBot{
 		//TODO tri des coups
 		double value = NEGATIVE_INF;
 		int offset = 0;
-		if(player == 1)
+		if(player == -1)
 			offset = 6;
 		for(int i = 1 ; i <= 6; i++) {
 			if(board.isPlayable(i+offset, player)) {

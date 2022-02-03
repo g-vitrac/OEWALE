@@ -208,7 +208,7 @@ public class Board
         this.log.get (currentPlayer).add (move);
     }
     
-    int playMove (int player, double [] decision) throws InvalidBotException
+    public int playMove (int player, double [] decision) throws InvalidBotException
     {
         int score = 0;
         int bestMove = this.selectMove (player, decision);
