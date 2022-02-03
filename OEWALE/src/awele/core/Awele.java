@@ -2,6 +2,7 @@ package awele.core;
 
 import awele.bot.Bot;
 import awele.output.OutputWriter;
+import utils.LongMethod;
 
 /**
  * @author Alexandre Blansché
@@ -31,6 +32,7 @@ public class Awele extends OutputWriter
     
     private int [] game (int firstPlayer) throws InvalidBotException
     {
+    	System.out.println("NEW GAME +++++++++++++++++++++++++++++++++++++++++");
         boolean end = false;
         Board board = new Board ();
         board.setCurrentPlayer (firstPlayer);
@@ -51,8 +53,12 @@ public class Awele extends OutputWriter
             if ((moveScore < 0) ||
                     (board.getScore (Board.otherPlayer (board.getCurrentPlayer ())) >= 25) ||
                     (board.getNbSeeds () <= 6) ||
-                    (nbStagnant >= Awele.MAX_STAGNANT))
+                    (nbStagnant >= Awele.MAX_STAGNANT)) {
                 end = true;
+                if(nbStagnant >= Awele.MAX_STAGNANT) {
+                	System.out.println("STAGNANT");
+                }
+            }
             this.printDebug ();
             this.printDebug (board);
             this.printDebug ("Score : " + board.getScore (0) + " - " + board.getScore (1));
@@ -61,7 +67,14 @@ public class Awele extends OutputWriter
         int [] score = new int [2];
         score [0] = board.getScore (0);
         score [1] = board.getScore (1);
+        if(score[0] > score[1])
+        	System.out.println("----------------------Winner : 0");
+        if(score[1] > score[0])
+        	System.out.println("----------------------Winner : 1");
+        if(score[0] == score[1])
+        	System.out.println("---------------------EGALITE");
         return score;
+        
     }
     
     /**
@@ -113,8 +126,10 @@ public class Awele extends OutputWriter
         int winner = this.getWinner ();
         if (winner < 0)
             this.printDebug ("Égalité");
-        else
-            this.printDebug ("Gagnant : " + this.players [winner]);
+        else {
+        	this.printDebug ("Gagnant : " + this.players [winner]);
+        }
+            
     }
     
     /**

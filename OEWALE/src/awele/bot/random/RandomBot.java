@@ -19,8 +19,8 @@ public class RandomBot extends DemoBot
      */
     public RandomBot () throws InvalidBotException
     {
-        this.setBotName ("Random");
-        this.addAuthor ("Alexandre Blansché");
+        //this.setBotName ("Random");
+        //this.addAuthor ("Alexandre Blansché");
     }
 
     /**

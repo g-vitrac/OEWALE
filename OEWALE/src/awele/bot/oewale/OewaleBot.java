@@ -136,31 +136,41 @@ public class OewaleBot extends CompetitorBot{
 		System.out.println();
 	}
 	
+	public static boolean end = false;
+	
 	@Override
 	public double[] getDecision(Board board) {
-		//System.out.println("-----------------------------------------------------");
-		//System.out.println("On recoit le board :");
-		//printBoard(this.convertBoard(board));
-		//System.out.println("Notre score : " + board.getScore(0) + " Adversaire score : " + board.getScore(1));
-		//System.out.println();
-		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(0)); 
-		double[] nextBoard = new double[6];  
-		for(int i =0; i < 6; i++) { 
-			if(Cboard.isPlayable(i)) { 
+		
+		System.out.println("-------------"+board.getCurrentPlayer()+"---------------------------------------");
+		System.out.println("On recoit le board :");
+		printBoard(this.convertBoard(board));
+		//if(end) System.exit(0);
+		System.out.println("Notre score : " + board.getScore(board.getCurrentPlayer()) + " Adversaire score : " + board.getScore(1-board.getCurrentPlayer()));
+		System.out.println();
+		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(board.getCurrentPlayer())); 
+		double[] decision = new double[6];  
+		for(int i = 1; i <= 6; i++) { 
+			if(Cboard.isPlayable(i, 1)) { 
 				CustomBoard copyBoard = Cboard.clone();
-				copyBoard.play((byte)i, (byte)-1);
-				if(copyBoard.isFinish()) {
+				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, 1);
+				copyBoard.play(i, 1, canTakeSeeds);
+				if(copyBoard.isFinish(1)) {
 					if(copyBoard.isWin()) {
-						nextBoard[i] = POSITIVE_INF;
+						end = true;
+						decision[i-1] = POSITIVE_INF;
+					}else if(copyBoard.isLose()) {
+						decision[i-1] = NEGATIVE_INF;
+					}else {
+						decision[i-1] = 0;
 					}
-					nextBoard[i] = NEGATIVE_INF;
+				}else {
+					decision[i-1] = negamax(copyBoard, 6, NEGATIVE_INF, POSITIVE_INF, 1);
 				}
-				nextBoard[i] = negamax(copyBoard, 8, NEGATIVE_INF, POSITIVE_INF, 1);
 			}
 		}
-		//System.out.println("Evaluation des coups :");
-		//System.out.println(nextBoard[0] + " " + nextBoard[1] + " " + nextBoard[2] + " " + nextBoard[3] + " " + nextBoard[4] + " " + nextBoard[5]);
-		return nextBoard; 
+		System.out.println("Evaluation des coups :");
+		System.out.println(decision[0] + " " + decision[1] + " " + decision[2] + " " + decision[3] + " " + decision[4] + " " + decision[5]);
+		return decision; 
 	}
 
 	@Override
@@ -187,17 +197,20 @@ public class OewaleBot extends CompetitorBot{
 	}
 	
 	// UTILS METHODS
-	
+
 	public double negamax(CustomBoard board, int depth, double alpha, double beta, int player) {
-		if(depth == 0 || board.isFinish()) {
-			/*if(board.isFinish()) {
+		if(depth == 0 || board.isFinish(player)) {
+			if(board.isFinish(player)) {
 				if(board.isWin()) {
 					return player * 50;
-				}
-				return player * -50;
-			}*/
-			this.printBoard(board.getBoardData());
-			System.out.println("board.getScore() : " + board.getScore()  + "  board.getOpponentScore() : " + board.getOpponentScore() + " etat : " + -player );
+				}else if(board.isLose())
+					return player * -50;
+				else
+					return 0;
+			}
+			//this.printBoard(board.getBoardData());
+			//System.out.println("board.getScore() : " + board.getScore()  + "  board.getOpponentScore() : " + board.getOpponentScore() + " player : " + player);
+			//System.out.println();
 			return player * (board.getScore() - board.getOpponentScore());
 		}
 		//TODO generation de tous les coups possibles
@@ -206,10 +219,11 @@ public class OewaleBot extends CompetitorBot{
 		int offset = 0;
 		if(player == 1)
 			offset = 6;
-		for(int i = 0 ; i < 6; i++) {
-			if(board.isPlayable(i+offset)) {
+		for(int i = 1 ; i <= 6; i++) {
+			if(board.isPlayable(i+offset, player)) {
 				CustomBoard copyBoard = board.clone();
-				copyBoard.play((byte)(i+offset), (byte)-1);
+				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, player);
+				copyBoard.play(i+offset, player, canTakeSeeds);
 				value = Math.max(value,  -negamax(copyBoard, depth - 1, -beta, -alpha, -player));
 				alpha = Math.max(alpha, value);
 				if(alpha >= beta) {
@@ -220,7 +234,6 @@ public class OewaleBot extends CompetitorBot{
 		return value;
 	}
 		
-	
 	public void findBestCoef(byte variationMax, OewaleBot trainingBot) {
 		this.setScoreGame(0); 
 		trainingBot.setScoreGame(0);

@@ -24,22 +24,32 @@ public class CustomBoard {
 		this.score = score;
 	}
 	
-	public boolean isPlayable(int i) {
-		if(LongMethod.getIVal((byte)(i+1), this.getBoardData()) == 0) {
+	public boolean isPlayable(int i, int player) {
+		if(LongMethod.getIVal((byte)(i), this.getBoardData()) == 0) {
 			return false;
 		}
 		boolean playable = true;
-		if(this.getOpponentNbSeeds() == 0 && this.getNbSeedInAnyHole((byte)(i+1)) + i <= 6) // if our opponent is starving and we can give him seed 
-			playable = false;
+		if(player == 1) {
+			if((this.getOpponentNbSeeds() == 0 && 6-i > this.getNbSeedInAnyHole(i)))
+				playable = false;
+		}else {
+			if((this.getOurNbSeeds() == 0 && 12-i > this.getNbSeedInAnyHole(i)))
+				playable = false;
+		}
 		return playable;
 	}
 	
-	public boolean isFinish() {
-		if(this.getAllRemainingSeeds() < 6)
+	public boolean isFinish(int player) {
+		if(this.getAllRemainingSeeds() <= 6 || this.score >= 25 || this.getOpponentScore() >= 25) {
 			return true;
+		}
+		int offset = 0;
+		if(player == -1) {
+			offset = 6;
+		}
 		Boolean finish = true;
-		for(byte i = 0; i < 6; i++) {
-			if(this.isPlayable(i)) {
+		for(int i = 1; i <= 6; i++) {
+			if(this.isPlayable(i+offset, player)) {
 				finish = false;
 			}
 		}
@@ -48,6 +58,10 @@ public class CustomBoard {
 	
 	public boolean isWin() {
 		return this.score > this.getOpponentScore();  
+	}
+	
+	public boolean isLose() {
+		return this.getOpponentScore() > this.score;
 	}
 	
 	public byte getAllRemainingSeeds() {
@@ -74,7 +88,7 @@ public class CustomBoard {
 		return sum;
 	}
 	
-	public byte getNbSeedInAnyHole(byte i) {
+	public byte getNbSeedInAnyHole(int i) {
 		return LongMethod.getIVal((byte)i, this.boardData);
 	}
 	
@@ -82,40 +96,59 @@ public class CustomBoard {
 		return (byte) (48 - this.score - this.getOurNbSeeds() - this.getOpponentNbSeeds());  
 	}
 	
-	public void play(byte i, byte max) {
-		byte holeIndex =  (byte) (i + 1);
-		byte nbSeedInHole = this.getNbSeedInAnyHole(holeIndex);
-		byte indexLastHole = (byte)(((holeIndex + nbSeedInHole) % 12));
-		byte cpt = (byte) (holeIndex + 1);
-		if(cpt > 12) cpt = 1;
-		for(byte j = nbSeedInHole; j > 0; j--) {
-			this.boardData = LongMethod.setIVal(cpt, (byte)(LongMethod.getIVal(cpt, this.boardData)+1), this.boardData);
-			cpt++;
-			if(cpt > 12) cpt = 1;
-			if(cpt == holeIndex) cpt++;
+	public boolean isOpponentStarvingAfterPlaying(int i, int max) {
+		CustomBoard clone = this.clone();
+		int nbSeeds;
+		clone.play(i, max, true);
+		if(max == 1) {
+			nbSeeds = clone.getOpponentNbSeeds();
+		} else {
+			nbSeeds = clone.getOurNbSeeds();
 		}
-		this.boardData = LongMethod.setIVal(holeIndex, (byte)0, this.boardData);
-		if(max == -1 && indexLastHole > 6) {
-
-			for(byte j = indexLastHole; j >= 7; j--) {
-				byte nb = LongMethod.getIVal(j, this.boardData);
-				if( nb == 2 || nb == 3) {
-					this.score += nb;
-					this.boardData = LongMethod.setIVal(j, (byte)0, this.boardData);
-
-				}
-				else {
-					break;
-				}
+		return nbSeeds != 0;
+	}
+	
+	public void play(int i, int max, boolean canTakeSeeds) {
+		int holeIndex = i;
+		int nbSeedInHole = this.getNbSeedInAnyHole(holeIndex);
+		int indexLastHole = (holeIndex + nbSeedInHole) % 12;
+		int cpt = holeIndex + 1;
+		if(cpt > 12) {
+			cpt = 1;
+		}
+		for(int j = nbSeedInHole; j > 0; j--) {
+			this.boardData = LongMethod.setIVal((byte)cpt, (byte)(LongMethod.getIVal((byte)cpt, this.boardData) + 1), this.boardData);
+			cpt++;
+			if(cpt > 12) {
+				cpt = 1;
 			}
-		}else if(max == 1 && indexLastHole < 6) {
-			for(byte j = indexLastHole; j >= 0; j--) {
-				byte nb = LongMethod.getIVal(j, this.boardData);
-				if( nb == 2 || nb == 3) {
-					this.boardData = LongMethod.setIVal(j, (byte)0, this.boardData);
+			if(cpt == holeIndex) {
+				cpt++;
+			}
+		}
+		this.boardData = LongMethod.setIVal((byte)holeIndex, (byte)0, this.boardData);
+		if(canTakeSeeds) {
+			if(max == 1 && indexLastHole > 6) {
+				for(int j = indexLastHole; j >= 7; j--) {
+					int nb = LongMethod.getIVal((byte)j, this.boardData);
+					if( nb == 2 || nb == 3) {
+						this.score += nb;
+						this.boardData = LongMethod.setIVal((byte)j, (byte)0, this.boardData);
+
+					}
+					else {
+						break;
+					}
 				}
-				else {
-					break;
+			}else if(max == -1 && indexLastHole <= 6) {
+				for(int j = indexLastHole; j >= 0; j--) {
+					int nb = LongMethod.getIVal((byte)j, this.boardData);
+					if( nb == 2 || nb == 3) {
+						this.boardData = LongMethod.setIVal((byte)j, (byte)0, this.boardData);
+					}
+					else {
+						break;
+					}
 				}
 			}
 		}

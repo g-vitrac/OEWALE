@@ -5,6 +5,7 @@ package awele.run;
 
 import java.util.Comparator;
 
+import awele.bot.oewale.CustomBoard;
 import awele.bot.oewaledeprecated.Node;
 import awele.core.Board;
 import utils.LongMethod;
@@ -25,11 +26,9 @@ public class test {
 	private static long convertBoard(Board board) {
 		long lboard = 0;
 		for(byte i = 0; i < 6; i++) {
-			System.out.println("notre trou " + (1+i) + "  val board prof : " + (byte)board.getPlayerHoles()[i]);
 			lboard = LongMethod.setIVal((byte)(i+1), (byte)board.getPlayerHoles()[i], lboard);
 		}
 		for(byte i = 0; i < 6 ; i++) {
-			System.out.println("trou adver " + (6+i+1) + "  val board prof : " + (byte)board.getOpponentHoles()[i]);
 			lboard = LongMethod.setIVal((byte)(6+i+1), (byte)board.getOpponentHoles()[i], lboard);
 		}
 		return lboard;
@@ -52,24 +51,27 @@ public class test {
 		System.out.println(LongMethod.toBinaryString(root.getData()));
 		*/
 		
-		Board b = new Board();
-		b.currentPlayer = 0;
-		b.holes[0][0] = 35;
-		b.holes[0][1] = 1;
-		b.holes[0][2] = 1;
-		b.holes[0][3] = 1;
-		b.holes[0][4] = 1;
-		b.holes[0][5] = 1;
+		Board board = new Board();
+		board.currentPlayer = 0;
+		board.holes[0][0] = 1;
+		board.holes[0][1] = 1;
+		board.holes[0][2] = 1;
+		board.holes[0][3] = 1;
+		board.holes[0][4] = 1;
+		board.holes[0][5] = 1;
 		
-		b.holes[1][0] = 1;
-		b.holes[1][1] = 1;
-		b.holes[1][2] = 1;
-		b.holes[1][3] = 1;
-		b.holes[1][4] = 1;
-		b.holes[1][5] = 3;
-		long  l = convertBoard(b);
-		System.out.println(LongMethod.toBinaryString(l));
-		printBoard(l);
+		board.holes[1][0] = 1;
+		board.holes[1][1] = 1;
+		board.holes[1][2] = 1;
+		board.holes[1][3] = 1;
+		board.holes[1][4] = 1;
+		board.holes[1][5] = 5;
+		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(board.getCurrentPlayer())); 
+		printBoard(Cboard.getBoardData());
+		boolean canTakeSeeds = Cboard.isOpponentStarvingAfterPlaying(12, 1);
+		System.out.println("CanTake : " + canTakeSeeds);
+		Cboard.play(12, 1, canTakeSeeds);
+		printBoard(Cboard.getBoardData());
 		
 		
 		
