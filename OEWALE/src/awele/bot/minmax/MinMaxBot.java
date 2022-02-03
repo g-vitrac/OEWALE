@@ -12,7 +12,7 @@ import utils.LongMethod;
 public class MinMaxBot extends DemoBot
 {
     /** Profondeur maximale */
-    private static final int MAX_DEPTH = 3;
+    private static final int MAX_DEPTH = 6;
 	
     /**
      * @throws InvalidBotException
@@ -46,7 +46,7 @@ public class MinMaxBot extends DemoBot
     public double [] getDecision (Board board)
     {
     	printBoard(this.convertBoard(board));
-    	System.out.println(LongMethod.toBinaryString(convertBoard(board)));
+    	//System.out.println(LongMethod.toBinaryString(convertBoard(board)));
         MinMaxNode.initialize (board, MinMaxBot.MAX_DEPTH);
         //return new MaxNode (board).getDecision ();
         double[] decision = new MaxNode (board).getDecision ();

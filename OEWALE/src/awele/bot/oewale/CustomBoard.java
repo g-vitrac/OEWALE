@@ -105,7 +105,7 @@ public class CustomBoard {
 		} else {
 			nbSeeds = clone.getOurNbSeeds();
 		}
-		return nbSeeds != 0;
+		return nbSeeds == 0;
 	}
 	
 	public void play(int i, int max, boolean canTakeSeeds) {

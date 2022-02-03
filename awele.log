@@ -39,9 +39,9 @@ Instanciation du bot "MinMax"
 Nom du bot : MinMax
 Auteur(s) : Alexandre Blansché
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.002
-Usage mémoire : 2,9 KiB
-Usage mémoire maximum : 23,0 MiB
+Durée d'une prise de décision : 00:00:00.058
+Usage mémoire : 3,2 KiB
+Usage mémoire maximum : 104,0 MiB
 
 Bot 6/8
 Classe : awele.bot.knn2.Knn2Bot
@@ -55,9 +55,9 @@ Instanciation du bot "Oewale"
 Nom du bot : Oewale
 Auteur(s) : Wati team
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.001
-Usage mémoire : 1,4 KiB
-Usage mémoire maximum : 2,1 MiB
+Durée d'une prise de décision : 00:00:00.011
+Usage mémoire : 1,3 KiB
+Usage mémoire maximum : 33,5 MiB
 
 Bot 8/8
 Classe : awele.bot.knn1.Knn1Bot
@@ -66,25 +66,10 @@ Bot "awele.bot.knn1.Knn1Bot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 2 bots ont été instanciés
-Durée du chargement : 00:00:00.646
+Durée du chargement : 00:00:02.556
 Mémoire utilisée : 3,6 MiB
 
 Que le championnat commence !
 
 Affrontement 1/1
 MinMax vs. Oewale
-Score : 3.0 - 0.0
-MinMax a gagné
-Nombre de coups joués : 42.095 par match
-Durée : 00:00:00.031 par match
-Mémoire utilisée : 3,7 MiB
-
-Durée du championnat : 00:00:06.298
-
-Scores finaux :
-MinMax : 3.0
-Oewale : 0.0
-
-Rangs :
-1. MinMax : 3.0
-2. Oewale : 0.0

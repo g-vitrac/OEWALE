@@ -143,10 +143,10 @@ public class OewaleBot extends CompetitorBot{
 		nbCoup = 0;
 		System.out.println("-------------"+board.getCurrentPlayer()+"---------------------------------------");
 		System.out.println("On recoit le board :");
-		System.out.println(LongMethod.toBinaryString(convertBoard(board)));
+		//System.out.println(LongMethod.toBinaryString(convertBoard(board)));
 		printBoard(this.convertBoard(board));
 		//if(end) System.exit(0);
-		System.out.println("Notre score : " + board.getScore(board.getCurrentPlayer()) + " Adversaire score : " + board.getScore(1-board.getCurrentPlayer()));
+		//System.out.println("Notre score : " + board.getScore(board.getCurrentPlayer()) + " Adversaire score : " + board.getScore(1-board.getCurrentPlayer()));
 		System.out.println();
 		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(board.getCurrentPlayer())); 
 		double[] decision = new double[6];
@@ -156,7 +156,7 @@ public class OewaleBot extends CompetitorBot{
 				nbCoup++;
 				CustomBoard copyBoard = Cboard.clone();
 				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, 1);
-				copyBoard.play(i, 1, canTakeSeeds);
+				copyBoard.play(i, 1, !canTakeSeeds);
 				if(copyBoard.isFinish(1)) {
 					if(copyBoard.isWin()) {
 						end = true;
@@ -167,7 +167,8 @@ public class OewaleBot extends CompetitorBot{
 						decision[i-1] = 0;
 					}
 				}else {
-					decision[i-1] = negamax(copyBoard, 6, NEGATIVE_INF, POSITIVE_INF, 1);
+					//decision[i-1] = negamax(copyBoard, 6, NEGATIVE_INF, POSITIVE_INF, 1);
+					decision[i-1] = minmax(copyBoard, 6, false);
 				}
 			}
 		}
@@ -205,10 +206,47 @@ public class OewaleBot extends CompetitorBot{
 	
 	public int nbCoup = 0;
 	
+	
+	public double minmax(CustomBoard board, int depth, boolean max) {
+		if(max) {
+			double value = NEGATIVE_INF;
+			if(depth == 0 || board.isFinish(1)) {
+				return (board.getScore() - board.getOpponentScore());
+			}else {
+				for(int i = 1 ; i <= 6; i++) {
+					if(board.isPlayable(i, 1)) {
+						CustomBoard copyBoard = board.clone();
+						boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, 1);
+						copyBoard.play(i, 1, !canTakeSeeds);
+						double eval = minmax(copyBoard, depth -1, false);
+						value = Math.max(value, eval);
+					}
+				}
+			}
+			return value;
+		}else {
+			double value = POSITIVE_INF;
+			if(depth == 0 || board.isFinish(-1)) {
+				return (board.getScore() - board.getOpponentScore());
+			}else {
+				for(int i = 7 ; i <= 12; i++) {
+					if(board.isPlayable(i, -1)) {
+						CustomBoard copyBoard = board.clone();
+						boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, -1);
+						copyBoard.play(i, -1, !canTakeSeeds);
+						double eval = minmax(copyBoard, depth -1, true);
+						value = Math.min(value, eval);
+					}
+				}
+			}
+			return value;
+		}
+	}
+	
 	public double negamax(CustomBoard board, int depth, double alpha, double beta, int player) {
-		nbCoup ++;
+		
 		if(depth == 0 || board.isFinish(player)) {
-			nbCoup ++;
+			
 			/*if(board.isFinish(player)) {
 				if(board.isWin()) {
 					return player * 50;
@@ -230,13 +268,14 @@ public class OewaleBot extends CompetitorBot{
 			offset = 6;
 		for(int i = 1 ; i <= 6; i++) {
 			if(board.isPlayable(i+offset, player)) {
+				nbCoup ++;
 				CustomBoard copyBoard = board.clone();
 				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, player);
-				copyBoard.play(i+offset, player, canTakeSeeds);
+				copyBoard.play(i+offset, player, !canTakeSeeds);
 				value = Math.max(value,  -negamax(copyBoard, depth - 1, -beta, -alpha, -player));
 				alpha = Math.max(alpha, value);
 				if(alpha >= beta) {
-					break;
+					//break;
 				}
 			}
 		}
