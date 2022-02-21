@@ -17,15 +17,16 @@ public abstract class LongMethod {
 	 * depending on the state of the long.
 	 * @param i The index of the value that the user wants to recover inside the long value. It must be > 255 otherwise overflow may happen.
 	 * @return The integer saved inside the long at the location i. /!\ 1 <= i <= 12 /!\
+	 * @throws Exception 
 	 */
-	public static byte getIVal(byte i, long l) {
+	public static byte getIVal(byte i, long l) throws Exception {
+
 		byte result = (byte)(l >> (5 * (i-1)));
 		result = (byte)(result & 31);
 		
 		// Overflow detected
 		if((l >>> NB_BIT_FAIBLE) > 0 && (l >>> NB_BIT_FAIBLE) == i)		
 			result = (byte)(result | (1 << 5));
-		
 		return result; 
 	}
 	
@@ -37,7 +38,6 @@ public abstract class LongMethod {
 	 * @return A long with the byte saved at the position i inside the long l.
 	 */
 	public static long setIVal(byte i, byte value, long l) {
-
 		long maskCP = 0b1111111111111111111111111111111111111111111111111111111111111111L;
 		long mask = 0b11111;
 		

@@ -105,8 +105,9 @@ public abstract class Bot
      * Fonction de prise de décision du bot
      * @param board État du plateau de jeu
      * @return Un tableau de six réels indiquant l'efficacité supposée de chacun des six coups possibles
+     * @throws Exception 
      */
-    public abstract double [] getDecision (Board board);
+    public abstract double [] getDecision (Board board) throws Exception;
 
     /**
      * Apprentissage du bot

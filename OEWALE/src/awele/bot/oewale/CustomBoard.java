@@ -1,5 +1,17 @@
 package awele.bot.oewale;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import utils.LongMethod;
 
 public class CustomBoard {
@@ -24,12 +36,12 @@ public class CustomBoard {
 		this.score = score;
 	}
 	
-	public boolean isPlayable(int i, int player) {
+	public boolean isPlayable(int i, int player) throws Exception {
 		if(LongMethod.getIVal((byte)(i), this.getBoardData()) == 0) {
 			return false;
 		}
 		boolean playable = true;
-		if(player == 1) {
+		if(player == OewaleBot.OEWALE) {
 			if((this.getOpponentNbSeeds() == 0 && 6-i > this.getNbSeedInAnyHole(i)))
 				playable = false;
 		}else {
@@ -39,12 +51,12 @@ public class CustomBoard {
 		return playable;
 	}
 	
-	public boolean isFinish(int player) {
+	public boolean isFinish(int player) throws Exception {
 		if(this.getAllRemainingSeeds() <= 6 || this.score >= 25 || this.getOpponentScore() >= 25) {
 			return true;
 		}
 		int offset = 0;
-		if(player == -1) {
+		if(player == OewaleBot.OPPONENT) {
 			offset = 6;
 		}
 		Boolean finish = true;
@@ -56,15 +68,15 @@ public class CustomBoard {
 		return finish;
 	}
 	
-	public boolean isWin() {
+	public boolean isWin() throws Exception {
 		return this.score > this.getOpponentScore();  
 	}
 	
-	public boolean isLose() {
+	public boolean isLose() throws Exception {
 		return this.getOpponentScore() > this.score;
 	}
 	
-	public byte getAllRemainingSeeds() {
+	public byte getAllRemainingSeeds() throws Exception {
 		byte sum = 0;
 		for(byte i = 1; i <= 12; i++) {
 			sum += LongMethod.getIVal((byte)i, this.boardData);
@@ -72,7 +84,7 @@ public class CustomBoard {
 		return sum;
 	}
 	
-	public byte getOurNbSeeds() {
+	public byte getOurNbSeeds() throws Exception {
 		byte sum = 0;
 		for(byte i = 1; i <= 6; i++) {
 			sum += LongMethod.getIVal((byte)i, this.boardData);
@@ -80,7 +92,7 @@ public class CustomBoard {
 		return sum;
 	}
 	
-	public byte getOpponentNbSeeds() {
+	public byte getOpponentNbSeeds() throws Exception {
 		byte sum = 0;
 		for(byte i = 7; i <= 12; i++) {
 			sum += LongMethod.getIVal((byte)i, this.boardData);
@@ -88,19 +100,19 @@ public class CustomBoard {
 		return sum;
 	}
 	
-	public byte getNbSeedInAnyHole(int i) {
+	public byte getNbSeedInAnyHole(int i) throws Exception {
 		return LongMethod.getIVal((byte)i, this.boardData);
 	}
 	
-	public byte getOpponentScore() {
+	public byte getOpponentScore() throws Exception {
 		return (byte) (48 - this.score - this.getOurNbSeeds() - this.getOpponentNbSeeds());  
 	}
 	
-	public boolean isOpponentStarvingAfterPlaying(int i, int max) {
+	public boolean isOpponentStarvingAfterPlaying(int i, int max) throws Exception {
 		CustomBoard clone = this.clone();
 		int nbSeeds;
 		clone.play(i, max, true);
-		if(max == 1) {
+		if(max == OewaleBot.OEWALE) {
 			nbSeeds = clone.getOpponentNbSeeds();
 		} else {
 			nbSeeds = clone.getOurNbSeeds();
@@ -108,10 +120,11 @@ public class CustomBoard {
 		return nbSeeds == 0;
 	}
 	
-	public void play(int i, int max, boolean canTakeSeeds) {
+	public void play(int i, int player, boolean canTakeSeeds) throws Exception {
 		int holeIndex = i;
 		int nbSeedInHole = this.getNbSeedInAnyHole(holeIndex);
 		int indexLastHole = (holeIndex + nbSeedInHole) % 12;
+		if(indexLastHole == 0) indexLastHole = 12;
 		int cpt = holeIndex + 1;
 		if(cpt > 12) {
 			cpt = 1;
@@ -125,10 +138,13 @@ public class CustomBoard {
 			if(cpt == holeIndex) {
 				cpt++;
 			}
+			if(cpt > 12) {
+				cpt = 1;
+			}
 		}
 		this.boardData = LongMethod.setIVal((byte)holeIndex, (byte)0, this.boardData);
 		if(canTakeSeeds) {
-			if(max == 1 && indexLastHole > 6) {
+			if(player == OewaleBot.OEWALE && indexLastHole > 6) {
 				for(int j = indexLastHole; j >= 7; j--) {
 					int nb = LongMethod.getIVal((byte)j, this.boardData);
 					if( nb == 2 || nb == 3) {
@@ -140,8 +156,8 @@ public class CustomBoard {
 						break;
 					}
 				}
-			}else if(max == -1 && indexLastHole <= 6) {
-				for(int j = indexLastHole; j >= 0; j--) {
+			}else if(player == OewaleBot.OPPONENT && indexLastHole <= 6) {
+				for(int j = indexLastHole; j >= 1; j--) {
 					int nb = LongMethod.getIVal((byte)j, this.boardData);
 					if( nb == 2 || nb == 3) {
 						this.boardData = LongMethod.setIVal((byte)j, (byte)0, this.boardData);
@@ -152,6 +168,67 @@ public class CustomBoard {
 				}
 			}
 		}
+	}
+	
+	public ArrayList<Integer> getIndexOfPlayableHole(int player, int offset) throws Exception {
+		ArrayList<Integer> index = new ArrayList<>();
+		for(int i = 1; i < 7; i++) {
+			if(this.isPlayable(i+offset, player)) {
+				index.add(i+offset);
+				//System.out.println("Trou : " + (i+offset) + " jouable");
+			}
+		}
+		return index;
+	}
+	
+	public int getHash(int index) throws Exception {
+		int nbSeedStartHole = this.getNbSeedInAnyHole(index);
+		int lastHole = (index + nbSeedStartHole) % 12;
+		if(lastHole == 0) lastHole = 12;
+		return index + 6 * nbSeedStartHole + 288 * this.getNbSeedInAnyHole(lastHole);
+	}
+	
+	public HashMap<CustomBoard, Integer> getSimulatedBoards(ArrayList<Integer> indexPlayableHole, int player) throws Exception {		
+		CustomBoard[] tabBoard = new CustomBoard[indexPlayableHole.size()];
+		Integer[] tabScore = new Integer[indexPlayableHole.size()];		
+		Integer[] tabHash = new Integer[indexPlayableHole.size()];	
+		int ind = 0;
+		HashMap<CustomBoard, Integer> res = new HashMap<CustomBoard, Integer>();
+		for(int index : indexPlayableHole) {
+			CustomBoard copyBoard = this.clone();
+			boolean canTakeSeeds = !copyBoard.isOpponentStarvingAfterPlaying(index, player);
+			copyBoard.play(index, player, canTakeSeeds);
+			int hash = this.getHash(index);
+			NodesScore.getInstance().getHashMap().putIfAbsent(hash, 0);
+		    tabBoard[ind] = copyBoard;
+		    tabScore[ind] = NodesScore.getInstance().getHashMap().get(hash);
+		    tabHash[ind] = hash;
+		    ind++;
+		}
+		for(int i = 0; i < tabBoard.length - 1; i++) {
+			int maxScore = 0;
+			for(int j = i+1; j < tabBoard.length; j++ ) {
+				int score = tabScore[i];
+				if(score >= maxScore) {
+					maxScore = score;
+					int tmp = tabScore[j];
+					tabScore[j] = tabScore[i];
+					tabScore[i] = tmp;
+					
+					CustomBoard tmp2 = tabBoard[j];
+					tabBoard[j] = tabBoard[i];
+					tabBoard[i] = tmp2;
+					
+					int tmp3 = tabHash[j];
+					tabHash[j] = tabHash[i];
+					tabHash[i] = tmp3;
+				}
+			}
+		}
+		for(int k = 0; k < tabScore.length; k++) {
+			res.put(tabBoard[k], tabHash[k]);
+		}
+		return res;
 	}
 	
 	public CustomBoard clone() {

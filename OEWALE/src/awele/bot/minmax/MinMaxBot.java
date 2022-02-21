@@ -45,16 +45,16 @@ public class MinMaxBot extends DemoBot
     @Override
     public double [] getDecision (Board board)
     {
-    	printBoard(this.convertBoard(board));
+    	//printBoard(this.convertBoard(board));
     	//System.out.println(LongMethod.toBinaryString(convertBoard(board)));
         MinMaxNode.initialize (board, MinMaxBot.MAX_DEPTH);
         //return new MaxNode (board).getDecision ();
         double[] decision = new MaxNode (board).getDecision ();
-		System.out.println(decision[0] + " " + decision[1] + " " + decision[2] + " " + decision[3] + " " + decision[4] + " " + decision[5]);
+		//System.out.println(decision[0] + " " + decision[1] + " " + decision[2] + " " + decision[3] + " " + decision[4] + " " + decision[5]);
         return  decision ;
     }
     
-    public void printBoard(long d) {
+    public void printBoard(long d) throws Exception {
 		System.out.println(LongMethod.getIVal((byte)12, d) + " " + LongMethod.getIVal((byte)11, d) + " " + LongMethod.getIVal((byte)10, d) + " " + LongMethod.getIVal((byte)9, d)+ " " + LongMethod.getIVal((byte)8, d)+ " " + LongMethod.getIVal((byte)7, d));
 		System.out.println(LongMethod.getIVal((byte)1, d) + " " + LongMethod.getIVal((byte)2, d) + " " + LongMethod.getIVal((byte)3, d) + " " + LongMethod.getIVal((byte)4, d)+ " " + LongMethod.getIVal((byte)5, d)+ " " + LongMethod.getIVal((byte)6, d));
 		System.out.println();

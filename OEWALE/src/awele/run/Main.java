@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.reflections.Reflections;
 
 import awele.bot.*;
+import awele.bot.oewale.OewaleBot;
 import awele.bot.random.RandomBot;
 import awele.core.Awele;
 import awele.core.InvalidBotException;
@@ -81,7 +82,9 @@ public final class Main extends OutputWriter
         return Runtime.getRuntime().totalMemory () - Runtime.getRuntime().freeMemory ();
     }
     
-    private void loadBots ()
+    public static int nodePrunned = 0;
+    
+    private void loadBots () throws Exception
     {
         long startLoading = System.currentTimeMillis ();
         long heapMaxSize = Runtime.getRuntime().maxMemory();
@@ -195,7 +198,7 @@ public final class Main extends OutputWriter
         this.print ("Mémoire utilisée : "+ Main.formatMemory (Main.getUsedMemory ()));
     }
     
-    private void tournament ()
+    private void tournament () throws Exception
     {
         this.print ();
         this.print ("Que le championnat commence !");
@@ -222,6 +225,7 @@ public final class Main extends OutputWriter
                     //awele.addDebug (StandardOutput.getInstance ());
                     try
                     {
+                    	System.out.println("Partie : " + k);
                         awele.play ();
                     }
                     catch (InvalidBotException e)
@@ -258,6 +262,7 @@ public final class Main extends OutputWriter
             }
         long end = System.currentTimeMillis ();
         this.print ();
+        System.out.println("Total noeud prunned : " + Main.nodePrunned);
         this.print ("Durée du championnat : " + Main.formatDuration (end - start));
         for (int i = 0; i < points.length; i++)
             points [i] = Math.round (points [i] * 100) / 100.;
@@ -292,8 +297,9 @@ public final class Main extends OutputWriter
     
     /**
      * @param args
+     * @throws Exception 
      */
-    public static void main (String [] args)
+    public static void main (String [] args) throws Exception
     {
         Main main = Main.getInstance ();
         main.addOutput (StandardOutput.getInstance ());

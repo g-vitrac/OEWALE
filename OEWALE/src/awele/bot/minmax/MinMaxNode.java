@@ -80,7 +80,8 @@ public abstract class MinMaxNode
                     {
                         alpha = this.alpha (this.evaluation, alpha);
                         beta = this.beta (this.evaluation, beta);
-                    }                        
+                    }
+                    //if(beta >= alpha) break;
                 }
                 catch (InvalidBotException e)
                 {

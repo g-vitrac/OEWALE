@@ -1,7 +1,9 @@
 package awele.core;
 
 import awele.bot.Bot;
+import awele.bot.oewale.OewaleBot;
 import awele.output.OutputWriter;
+import awele.run.Main;
 import utils.LongMethod;
 
 /**
@@ -30,7 +32,7 @@ public class Awele extends OutputWriter
         this.runningTime = 0;
     }
     
-    private int [] game (int firstPlayer) throws InvalidBotException
+    private int [] game (int firstPlayer) throws Exception
     {
     	//System.out.println("NEW GAME +++++++++++++++++++++++++++++++++++++++++");
         boolean end = false;
@@ -95,10 +97,11 @@ public class Awele extends OutputWriter
     
     /**
      * Fait jouer deux parties d'Awele entre les deux bots
-     * @throws InvalidBotException 
+     * @throws Exception 
      */
-    public void play () throws InvalidBotException
+    public void play () throws Exception
     {
+    	//OewaleBot.nbNodesPrunned=0;
         this.print ("Partie 1");
         long start = System.currentTimeMillis ();
         this.players [0].initialize ();
@@ -108,8 +111,12 @@ public class Awele extends OutputWriter
         this.players [0].finish ();
         this.players [1].finish ();
         this.runningTime += System.currentTimeMillis () - start;
+        Main.nodePrunned += OewaleBot.nbNodesPrunned;
+        //System.out.println("Temps partie : " + (System.currentTimeMillis() - start));
+        //System.out.println("Nb noued prunned : " + OewaleBot.nbNodesPrunned);
         this.print ("Score: " + game1Score [0] + " - " + game1Score [1]);
         this.print ("Partie 2");
+        OewaleBot.nbNodesPrunned = 0;
         start = System.currentTimeMillis ();
         this.players [0].initialize ();
         this.players [1].initialize ();
@@ -117,7 +124,11 @@ public class Awele extends OutputWriter
         //System.out.println("Nous : " + game2Score[0] + " Lui : " + game2Score[1]);
         this.players [0].finish ();
         this.players [1].finish ();
+       // System.out.println("Temps partie : " + (System.currentTimeMillis() - start));
         this.runningTime += System.currentTimeMillis () - start;
+        
+       // Main.nodePrunned += OewaleBot.nbNodesPrunned;
+        //System.out.println("Nb noued prunned : " + OewaleBot.nbNodesPrunned);
         this.print ("Score: " + game2Score [0] + " - " + game2Score [1]);
         this.runningTime /= 2;
         this.nbMoves /= 2.;
