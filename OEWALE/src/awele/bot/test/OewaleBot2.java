@@ -1,7 +1,7 @@
 /**
  * 
  */
-package awele.bot.oewale;
+package awele.bot.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import awele.core.Board;
 import awele.core.InvalidBotException;
 import utils.LongMethod;
 
-public class OewaleBot extends CompetitorBot{
+public class OewaleBot2 extends CompetitorBot{
 	
 	public static final int OEWALE = 1;
 	public static final int OPPONENT = -1;
@@ -27,9 +27,9 @@ public class OewaleBot extends CompetitorBot{
 	private static double PREVIOUS_DECISION_TIME_DURATION = -100;
 	private static int CPT_DEPTH = 0;
 
-	public OewaleBot() throws InvalidBotException {
-		this.setBotName ("Oewale");
-        this.addAuthor ("Wati team");
+	public OewaleBot2() throws InvalidBotException {
+		//this.setBotName ("test");
+        //this.addAuthor ("test team");
 	}
 	
 	@Override
@@ -59,18 +59,16 @@ public class OewaleBot extends CompetitorBot{
 		System.out.println();
 	}
 				
-	public int nbNodeVisited;
 	public int nbNodePrunned;
 	
 	@Override
 	public double[] getDecision(Board board) throws Exception {
 		double start = System.currentTimeMillis();
-		CustomBoard Cboard = new CustomBoard(convertBoard(board), board.getScore(board.getCurrentPlayer())); 
+		CustomBoard2 Cboard = new CustomBoard2(convertBoard(board), board.getScore(board.getCurrentPlayer())); 
 		double[] decision = {UNPLAYABLE,UNPLAYABLE,UNPLAYABLE,UNPLAYABLE,UNPLAYABLE,UNPLAYABLE};
 		for(int i = 1; i <= 6; i++) { 
 			if(Cboard.isPlayable(i, 1)) {
-				nbNodeVisited++;
-				CustomBoard copyBoard = Cboard.clone();
+				CustomBoard2 copyBoard = Cboard.clone();
 				boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, OEWALE);
 				copyBoard.play(i, OEWALE, !canTakeSeeds);
 				if(copyBoard.isFinish(OEWALE)) {
@@ -82,25 +80,15 @@ public class OewaleBot extends CompetitorBot{
 						decision[i-1] = 0;
 					}
 				}else {
-					decision[i-1] = alphabeta(copyBoard, DEPTH, NEGATIVE_INF, POSITIVE_INF, false);
+					decision[i-1] = alphabeta(copyBoard, 6, NEGATIVE_INF, POSITIVE_INF, false);
 				}
 			}
 		}
-		updateDepth(System.currentTimeMillis() - start);
+		//updateDepth(System.currentTimeMillis() - start);
+		//printBoard(convertBoard(board));
+		//System.out.println("["+ decision[0] +", "+ decision[1] + ", "+ decision[2] +  ", "+ decision[3] + ", "+ decision[4] + ", "+ decision[5] +"]");
+		//System.out.println("Node visited : " + nbNodeVisited);
 
-		int indiceBestMove = -1;
-		double bestValue = NEGATIVE_INF;
-		for(int i = 0; i < 6; i++) {
-			if(decision[i] > bestValue) {
-				bestValue = decision[i];
-				indiceBestMove = i;
-			}
-			if(decision[i] == bestValue) {
-				indiceBestMove = i;
-			}
-		}
-		decision[indiceBestMove] = POSITIVE_INF;
-	
 		return decision;
 	}
 	
@@ -131,7 +119,7 @@ public class OewaleBot extends CompetitorBot{
 	}
 	
 	
-	public double minmax(CustomBoard board, int depth, double alpha, double beta, boolean max) throws Exception {
+	public double minmax(CustomBoard2 board, int depth, double alpha, double beta, boolean max) throws Exception {
 		if(max) {
 			double value = NEGATIVE_INF;
 			if(depth == 0 || board.isFinish(1)) {
@@ -139,7 +127,7 @@ public class OewaleBot extends CompetitorBot{
 			}else {
 				for(int i = 1 ; i <= 6; i++) {
 					if(board.isPlayable(i, 1)) {
-						CustomBoard copyBoard = board.clone();
+						CustomBoard2 copyBoard = board.clone();
 						boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, 1);
 						copyBoard.play(i, 1, !canTakeSeeds);
 						double eval = minmax(copyBoard, depth -1, alpha, beta, false);
@@ -159,7 +147,7 @@ public class OewaleBot extends CompetitorBot{
 			}else {
 				for(int i = 7 ; i <= 12; i++) {
 					if(board.isPlayable(i, -1)) {
-						CustomBoard copyBoard = board.clone();
+						CustomBoard2 copyBoard = board.clone();
 						boolean canTakeSeeds = copyBoard.isOpponentStarvingAfterPlaying(i, -1);
 						copyBoard.play(i, -1, !canTakeSeeds);
 						double eval = minmax(copyBoard, depth -1, alpha, beta, true);
@@ -175,32 +163,32 @@ public class OewaleBot extends CompetitorBot{
 		}
 	}
 
-	public double test(CustomBoard board, int depth, double alpha, double beta, boolean max) throws Exception {
+	public double test(CustomBoard2 board, int depth, double alpha, double beta, boolean max) throws Exception {
 		if(max) {
 			double value = NEGATIVE_INF;
 			if(depth == 0 || board.isFinish(OEWALE)) {
 				return (board.getScore() - board.getOpponentScore());
 			}else {
 				ArrayList<Integer> indexPlayableHole = board.getIndexOfPlayableHole(OEWALE, 0);
-				HashMap<CustomBoard, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OEWALE);
+				HashMap<CustomBoard2, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OEWALE);
 				int i = 0;
-				for (Map.Entry<CustomBoard, Integer> entry : simulatedBoards.entrySet()) {
+				for (Map.Entry<CustomBoard2, Integer> entry : simulatedBoards.entrySet()) {
 					double eval = test(entry.getKey(), depth -1, alpha, beta, false);
 					if(eval > value) {
 						value = eval;
-						NodesScore.getInstance().getHashMap().put(entry.getValue(), NodesScore.getInstance().getHashMap().get(entry.getValue()) + i);
+						NodesScore2.getInstance().getHashMap().put(entry.getValue(), NodesScore2.getInstance().getHashMap().get(entry.getValue()) + i);
 						int j = i;
-						for (Map.Entry<CustomBoard, Integer> e : simulatedBoards.entrySet()) {
+						for (Map.Entry<CustomBoard2, Integer> e : simulatedBoards.entrySet()) {
 							if (j == 0 ) break;
-							NodesScore.getInstance().getHashMap().put(e.getValue(), NodesScore.getInstance().getHashMap().get(e.getValue()) - 1);
+							NodesScore2.getInstance().getHashMap().put(e.getValue(), NodesScore2.getInstance().getHashMap().get(e.getValue()) - 1);
 							j--;
 						}
 						if(value > beta) {
-							NodesScore.getInstance().getHashMap().put(entry.getValue(), NodesScore.getInstance().getHashMap().get(entry.getValue()) + i);
+							NodesScore2.getInstance().getHashMap().put(entry.getValue(), NodesScore2.getInstance().getHashMap().get(entry.getValue()) + i);
 							int j2 = i;
-							for (Map.Entry<CustomBoard, Integer> e : simulatedBoards.entrySet()) {
+							for (Map.Entry<CustomBoard2, Integer> e : simulatedBoards.entrySet()) {
 								if (j2 == 0 ) break;
-								NodesScore.getInstance().getHashMap().put(e.getValue(), NodesScore.getInstance().getHashMap().get(e.getValue()) - 1);
+								NodesScore2.getInstance().getHashMap().put(e.getValue(), NodesScore2.getInstance().getHashMap().get(e.getValue()) - 1);
 								j2--;
 							}
 							return value;
@@ -217,25 +205,25 @@ public class OewaleBot extends CompetitorBot{
 				return (board.getScore() - board.getOpponentScore());
 			}else {
 				ArrayList<Integer> indexPlayableHole = board.getIndexOfPlayableHole(OPPONENT, 6);
-				HashMap<CustomBoard, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OPPONENT);
+				HashMap<CustomBoard2, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OPPONENT);
 				int i = 0;
-				for (Map.Entry<CustomBoard, Integer> entry : simulatedBoards.entrySet()) {					
+				for (Map.Entry<CustomBoard2, Integer> entry : simulatedBoards.entrySet()) {					
 					double eval = test(entry.getKey(), depth -1, alpha, beta, true);
 					if(eval < value) {
 						value = eval;
-						NodesScore.getInstance().getHashMap().put(entry.getValue(), NodesScore.getInstance().getHashMap().get(entry.getValue()) + i);
+						NodesScore2.getInstance().getHashMap().put(entry.getValue(), NodesScore2.getInstance().getHashMap().get(entry.getValue()) + i);
 						int j = i;
-						for (Map.Entry<CustomBoard, Integer> e : simulatedBoards.entrySet()) {
+						for (Map.Entry<CustomBoard2, Integer> e : simulatedBoards.entrySet()) {
 							if (j == 0 ) break;
-							NodesScore.getInstance().getHashMap().put(e.getValue(), NodesScore.getInstance().getHashMap().get(e.getValue()) - 1);
+							NodesScore2.getInstance().getHashMap().put(e.getValue(), NodesScore2.getInstance().getHashMap().get(e.getValue()) - 1);
 							j--;
 						}
 						if(alpha > value) {						
-							NodesScore.getInstance().getHashMap().put(entry.getValue(), NodesScore.getInstance().getHashMap().get(entry.getValue()) + i);
+							NodesScore2.getInstance().getHashMap().put(entry.getValue(), NodesScore2.getInstance().getHashMap().get(entry.getValue()) + i);
 							int j2 = i;
-							for (Map.Entry<CustomBoard, Integer> e : simulatedBoards.entrySet()) {
+							for (Map.Entry<CustomBoard2, Integer> e : simulatedBoards.entrySet()) {
 								if (j2 == 0 ) break;
-								NodesScore.getInstance().getHashMap().put(e.getValue(), NodesScore.getInstance().getHashMap().get(e.getValue()) - 1);
+								NodesScore2.getInstance().getHashMap().put(e.getValue(), NodesScore2.getInstance().getHashMap().get(e.getValue()) - 1);
 								j2--;
 							}
 							return value;
@@ -249,20 +237,19 @@ public class OewaleBot extends CompetitorBot{
 		}
 	}
 	
-	public double alphabeta(CustomBoard board, int depth, double alpha, double beta, boolean max) throws Exception {
+	public double alphabeta(CustomBoard2 board, int depth, double alpha, double beta, boolean max) throws Exception {
 		if(max) {
 			double value = NEGATIVE_INF;
 			if(depth == 0 || board.isFinish(OEWALE)) {
 				return (board.getScore() - board.getOpponentScore());
 			}else {
 				ArrayList<Integer> indexPlayableHole = board.getIndexOfPlayableHole(OEWALE, 0);
-				HashMap<CustomBoard, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OEWALE);
-				for (Map.Entry<CustomBoard, Integer> entry : simulatedBoards.entrySet()) {
-					nbNodeVisited++;
+				HashMap<CustomBoard2, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OEWALE);
+				for (Map.Entry<CustomBoard2, Integer> entry : simulatedBoards.entrySet()) {
 					double eval = alphabeta(entry.getKey(), depth -1, alpha, beta, false);
 					value = Math.max(value, eval);
 					if(value > beta) {
-						NodesScore.getInstance().getHashMap().put(entry.getValue(), NodesScore.getInstance().getHashMap().get(entry.getValue()) + 1);
+						NodesScore2.getInstance().getHashMap().put(entry.getValue(), NodesScore2.getInstance().getHashMap().get(entry.getValue()) + 1);
 						return value;
 					}
 					alpha = Math.max(alpha , value);				
@@ -275,13 +262,12 @@ public class OewaleBot extends CompetitorBot{
 				return (board.getScore() - board.getOpponentScore());
 			}else {
 				ArrayList<Integer> indexPlayableHole = board.getIndexOfPlayableHole(OPPONENT, 6);
-				HashMap<CustomBoard, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OPPONENT);
-				for (Map.Entry<CustomBoard, Integer> entry : simulatedBoards.entrySet()) {
-					nbNodeVisited++;
+				HashMap<CustomBoard2, Integer> simulatedBoards = board.getSimulatedBoards(indexPlayableHole, OPPONENT);
+				for (Map.Entry<CustomBoard2, Integer> entry : simulatedBoards.entrySet()) {
 					double eval = alphabeta(entry.getKey(), depth -1, alpha, beta, true);
 					value = Math.min(value, eval);
 					if(alpha > value) {						
-						NodesScore.getInstance().getHashMap().put(entry.getValue(), NodesScore.getInstance().getHashMap().get(entry.getValue()) + 1);
+						NodesScore2.getInstance().getHashMap().put(entry.getValue(), NodesScore2.getInstance().getHashMap().get(entry.getValue()) + 1);
 						return value;
 					}
 					beta = Math.min(beta, value);

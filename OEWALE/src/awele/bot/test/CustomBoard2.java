@@ -1,4 +1,4 @@
-package awele.bot.oewale;
+package awele.bot.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 
 import utils.LongMethod;
 
-public class CustomBoard {
+public class CustomBoard2 {
 
 	private long boardData;
 	private int score;
 	
-	public CustomBoard(long boardData, int score) {
+	public CustomBoard2(long boardData, int score) {
 		this.boardData = boardData;
 		this.score = score;
 	}
@@ -41,7 +41,7 @@ public class CustomBoard {
 			return false;
 		}
 		boolean playable = true;
-		if(player == OewaleBot.OEWALE) {
+		if(player == OewaleBot2.OEWALE) {
 			if((this.getOpponentNbSeeds() == 0 && 6-i > this.getNbSeedInAnyHole(i)))
 				playable = false;
 		}else {
@@ -56,7 +56,7 @@ public class CustomBoard {
 			return true;
 		}
 		int offset = 0;
-		if(player == OewaleBot.OPPONENT) {
+		if(player == OewaleBot2.OPPONENT) {
 			offset = 6;
 		}
 		Boolean finish = true;
@@ -109,10 +109,10 @@ public class CustomBoard {
 	}
 	
 	public boolean isOpponentStarvingAfterPlaying(int i, int max) throws Exception {
-		CustomBoard clone = this.clone();
+		CustomBoard2 clone = this.clone();
 		int nbSeeds;
 		clone.play(i, max, true);
-		if(max == OewaleBot.OEWALE) {
+		if(max == OewaleBot2.OEWALE) {
 			nbSeeds = clone.getOpponentNbSeeds();
 		} else {
 			nbSeeds = clone.getOurNbSeeds();
@@ -144,7 +144,7 @@ public class CustomBoard {
 		}
 		this.boardData = LongMethod.setIVal((byte)holeIndex, (byte)0, this.boardData);
 		if(canTakeSeeds) {
-			if(player == OewaleBot.OEWALE && indexLastHole > 6) {
+			if(player == OewaleBot2.OEWALE && indexLastHole > 6) {
 				for(int j = indexLastHole; j >= 7; j--) {
 					int nb = LongMethod.getIVal((byte)j, this.boardData);
 					if( nb == 2 || nb == 3) {
@@ -156,7 +156,7 @@ public class CustomBoard {
 						break;
 					}
 				}
-			}else if(player == OewaleBot.OPPONENT && indexLastHole <= 6) {
+			}else if(player == OewaleBot2.OPPONENT && indexLastHole <= 6) {
 				for(int j = indexLastHole; j >= 1; j--) {
 					int nb = LongMethod.getIVal((byte)j, this.boardData);
 					if( nb == 2 || nb == 3) {
@@ -187,20 +187,20 @@ public class CustomBoard {
 		return index + 6 * nbSeedStartHole + 288 * this.getNbSeedInAnyHole(lastHole);
 	}
 	
-	public HashMap<CustomBoard, Integer> getSimulatedBoards(ArrayList<Integer> indexPlayableHole, int player) throws Exception {		
-		CustomBoard[] tabBoard = new CustomBoard[indexPlayableHole.size()];
+	public HashMap<CustomBoard2, Integer> getSimulatedBoards(ArrayList<Integer> indexPlayableHole, int player) throws Exception {		
+		CustomBoard2[] tabBoard = new CustomBoard2[indexPlayableHole.size()];
 		Integer[] tabScore = new Integer[indexPlayableHole.size()];		
 		Integer[] tabHash = new Integer[indexPlayableHole.size()];	
 		int ind = 0;
-		HashMap<CustomBoard, Integer> res = new HashMap<CustomBoard, Integer>();
+		HashMap<CustomBoard2, Integer> res = new HashMap<CustomBoard2, Integer>();
 		for(int index : indexPlayableHole) {
-			CustomBoard copyBoard = this.clone();
+			CustomBoard2 copyBoard = this.clone();
 			boolean canTakeSeeds = !copyBoard.isOpponentStarvingAfterPlaying(index, player);
 			copyBoard.play(index, player, canTakeSeeds);
 			int hash = this.getHash(index);
-			NodesScore.getInstance().getHashMap().putIfAbsent(hash, 0);
+			NodesScore2.getInstance().getHashMap().putIfAbsent(hash, 0);
 		    tabBoard[ind] = copyBoard;
-		    tabScore[ind] = NodesScore.getInstance().getHashMap().get(hash);
+		    tabScore[ind] = NodesScore2.getInstance().getHashMap().get(hash);
 		    tabHash[ind] = hash;
 		    ind++;
 		}
@@ -218,7 +218,7 @@ public class CustomBoard {
 			tabScore[indiceMax] = tabScore[i];
 			tabScore[i] = tmp;
 			
-			CustomBoard tmp2 = tabBoard[indiceMax];
+			CustomBoard2 tmp2 = tabBoard[indiceMax];
 			tabBoard[indiceMax] = tabBoard[i];
 			tabBoard[i] = tmp2;
 			
@@ -232,7 +232,7 @@ public class CustomBoard {
 		return res;
 	}
 	
-	public CustomBoard clone() {
-		return new CustomBoard(this.boardData, this.score);
+	public CustomBoard2 clone() {
+		return new CustomBoard2(this.boardData, this.score);
 	}
 }

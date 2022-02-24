@@ -212,6 +212,8 @@ public class Board
     {
         int score = 0;
         int bestMove = this.selectMove (player, decision);
+		//System.out.println("["+ decision[0] +", "+ decision[1] + ", "+ decision[2] +  ", "+ decision[3] + ", "+ decision[4] + ", "+ decision[5] +"]");
+        //System.out.println("Coup joué : " + bestMove);
         //System.out.println("Coup joué = " + (bestMove+1));
         if (bestMove >= 0)
         {

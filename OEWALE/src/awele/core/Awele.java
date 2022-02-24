@@ -64,6 +64,7 @@ public class Awele extends OutputWriter
             this.printDebug ();
             this.printDebug (board);
             this.printDebug ("Score : " + board.getScore (0) + " - " + board.getScore (1));
+            //System.out.println("Score : " + board.getScore (0) + " - " + board.getScore (1));
         }
         this.printDebug ();
         int [] score = new int [2];
@@ -111,12 +112,10 @@ public class Awele extends OutputWriter
         this.players [0].finish ();
         this.players [1].finish ();
         this.runningTime += System.currentTimeMillis () - start;
-        Main.nodePrunned += OewaleBot.nbNodesPrunned;
         //System.out.println("Temps partie : " + (System.currentTimeMillis() - start));
         //System.out.println("Nb noued prunned : " + OewaleBot.nbNodesPrunned);
         this.print ("Score: " + game1Score [0] + " - " + game1Score [1]);
         this.print ("Partie 2");
-        OewaleBot.nbNodesPrunned = 0;
         start = System.currentTimeMillis ();
         this.players [0].initialize ();
         this.players [1].initialize ();

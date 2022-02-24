@@ -1,70 +1,77 @@
 Mémoire totale : 2,0 GiB
-8 classes ont été trouvées
+9 classes ont été trouvées
 class awele.bot.random.RandomBot
 class awele.bot.first.FirstBot
 class awele.bot.last.LastBot
 class awele.bot.oewaledeprecated.OewaleBot
+class awele.bot.test.OewaleBot2
 class awele.bot.minmax.MinMaxBot
 class awele.bot.knn2.Knn2Bot
 class awele.bot.oewale.OewaleBot
 class awele.bot.knn1.Knn1Bot
 
-Bot 1/8
+Bot 1/9
 Classe : awele.bot.random.RandomBot
 Nom du bot : 
 Bot "awele.bot.random.RandomBot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
-Bot 2/8
+Bot 2/9
 Classe : awele.bot.first.FirstBot
 Nom du bot : 
 Bot "awele.bot.first.FirstBot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
-Bot 3/8
+Bot 3/9
 Classe : awele.bot.last.LastBot
 Nom du bot : 
 Bot "awele.bot.last.LastBot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
-Bot 4/8
+Bot 4/9
 Classe : awele.bot.oewaledeprecated.OewaleBot
 Nom du bot : 
 Bot "awele.bot.oewaledeprecated.OewaleBot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
-Bot 5/8
+Bot 5/9
+Classe : awele.bot.test.OewaleBot2
+Nom du bot : 
+Bot "awele.bot.test.OewaleBot2" disqualifié : ne peut pas être instancié
+java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+
+Bot 6/9
 Classe : awele.bot.minmax.MinMaxBot
 Instanciation du bot "MinMax"
 Nom du bot : MinMax
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.068
-Usage mémoire : 2,1 KiB
-Usage mémoire maximum : 42,5 MiB
+Durée d'une prise de décision : 00:00:00.069
+Usage mémoire : 2,4 KiB
+Usage mémoire maximum : 64,5 MiB
 
-Bot 6/8
+Bot 7/9
 Classe : awele.bot.knn2.Knn2Bot
 Nom du bot : 
 Bot "awele.bot.knn2.Knn2Bot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
-Bot 7/8
+Bot 8/9
 Classe : awele.bot.oewale.OewaleBot
 Instanciation du bot "Oewale"
 Nom du bot : Oewale
 Temps d'apprentissage : 00:00:00.000
-Durée d'une prise de décision : 00:00:00.115
-Usage mémoire : 83,2 KiB
-Usage mémoire maximum : 64,2 MiB
+Durée d'une prise de décision : 00:00:00.084
+Usage mémoire : 78,8 KiB
+Usage mémoire maximum : 11,7 MiB
 
-Bot 8/8
+Bot 9/9
 Classe : awele.bot.knn1.Knn1Bot
 Nom du bot : 
 Bot "awele.bot.knn1.Knn1Bot" disqualifié : ne peut pas être instancié
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 2 bots ont été instanciés
-Durée du chargement : 00:00:06.592
+Durée du chargement : 00:00:06.456
 Mémoire utilisée : 3,7 MiB
 
 Que le championnat commence !
