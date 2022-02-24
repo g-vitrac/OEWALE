@@ -5,13 +5,13 @@ package awele.bot.oewale;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-
 import awele.bot.CompetitorBot;
 import awele.core.Board;
 import awele.core.InvalidBotException;
+import awele.genetique.Generation;
+import awele.genetique.Genome;
+import awele.genetique.NotreAwele;
 import utils.LongMethod;
 
 public class OewaleBot extends CompetitorBot{
@@ -61,6 +61,7 @@ public class OewaleBot extends CompetitorBot{
 				
 	public int nbNodeVisited;
 	public int nbNodePrunned;
+	private Genome genome;
 	
 	@Override
 	public double[] getDecision(Board board) throws Exception {
@@ -100,7 +101,6 @@ public class OewaleBot extends CompetitorBot{
 			}
 		}
 		decision[indiceBestMove] = POSITIVE_INF;
-	
 		return decision;
 	}
 	
@@ -293,6 +293,140 @@ public class OewaleBot extends CompetitorBot{
 	
 	@Override
 	public void learn() {
+			try {
+				OewaleBot winner = new OewaleBot();
+				
+				OewaleBot looser = new OewaleBot();
+				
+				Generation g = new Generation();
+				
+				int nbMaxGenome = 100;
+				
+				int nbMaxGeneration = 12;
+				
+				int nbFeatures = 7;
+				
+				for(int i = 0; i < nbMaxGenome; i++) {
+					
+					double [] features = new double[nbFeatures];
+					
+					for(int j = 0; j < nbFeatures; j++) {
+						
+						features[j] = (Math.random() * 4) - 2;
+						
+					}
+					
+					g.generation.add(new Genome(features));
+					
+				}
+			
+				int [] score = null;
+				
+				for(int i = 0; i < nbMaxGeneration; i++) {
+					
+					winner.setGenome(g.generation.get(0));
+					
+					for(int j = 1; j < nbMaxGenome; i++) {
+						
+						looser.setGenome(g.generation.get(j));
+						
+						NotreAwele awale = new NotreAwele (winner, looser);
+						
+                        score = awale.play();
+						 		
+						g.generation.get(j).score = score[0] - score[1];
+						
+		                System.gc ();
+
+					}
+
+					
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+		}
+	}
+	
+	public int [] calcFeatures(CustomBoard b) throws Exception {
 		
+		int [] val = new int [4];
+		
+		int nbtrouvide = 0;
+		
+		int nbmaxtrouvide = 0;
+		
+		boolean derniervide = false;
+		
+		for(int i = 1; i <= 12; i++) {
+			
+			/*
+			technique 3 tableaux
+			int s = b.getNbSeedInAnyHole(i);
+			
+			if(s == 0) {
+				
+				if(derniervide) {
+					
+					if(nbtrouvide == 0) {
+						nbtrouvide += 2;
+					}else {
+						nbtrouvide ++;
+					}
+					
+				}else {
+					
+					derniervide = true;
+					
+				}
+				
+			}else {
+				
+				if(derniervide) {
+					
+					if(nbtrouvide > nbmaxtrouvide) {
+						
+						int tmp = nbmaxtrouvide;
+						
+						nbmaxtrouvide = nbtrouvide;
+						
+						nbtrouvide += tmp;
+					
+					}
+					
+				}
+				
+				nbtrouvide = 0;
+				
+				derniervide = false;
+				
+			}*/
+
+			if( s >= 12) {
+				
+				if(i < 7) {
+					
+					val[0]++;
+					val[1] += s;
+					
+				}else {
+					
+					val[2]++;
+					val[3] += s;
+					
+				}
+				
+			}
+		}
+		return val;
+	}
+	
+	public double h(CustomBoard b, int player) throws Exception {
+		int []v = calcFeatures(b);
+		return (v[0] - v[2]) * this.genome.getGenes()[0] + (v[1] - v[2]) *  this.genome.getGenes()[1]  ;
+	}
+	
+	private void setGenome(Genome genome) {
+		this.genome = genome;
 	}	
 }
